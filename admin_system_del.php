@@ -25,6 +25,24 @@ while($n = $db->fetch_array($querye)){
 } 
 $id_in=$id_n[$da['up_id']];
 ?>
+<script language="JavaScript">
+function change_btn(st) {
+	if (st == 'c') {
+		document.getElementById("subm_1").innerHTML = '資料傳輸中';
+	} else {
+		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
+	}
+}
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');
+	} else {
+		document.form1.submit();
+		setTimeout("change_btn('c')", 500);
+	}
+}
+</script>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -71,7 +89,7 @@ $id_in=$id_n[$da['up_id']];
                 </tr>
                 <tr>
                     <td colspan="10" align="center">
-                                <div id="subm_1" style="height:20px; text-align:center"><input type="submit" value="刪　　　　除" /><input type="hidden" name="act" value="add" /></div>
+                                <div id="subm_1" style="height:20px; text-align:center"><input type="submit" value="刪　　　　除" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
                             </td>
                         </tr>
             </table>

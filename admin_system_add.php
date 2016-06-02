@@ -36,44 +36,55 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <? include('include/css_js.php');?>
-            <script language="JavaScript">
-				function strim(str){
-					return str.replace(/(^\s*)|(\s*$)/g, "");
-				}
-				function check_empty() {
-                    ierror = 0;
-                    message = '';
-   
-					var cidRegExp = /^\d{1,}$/;
-					cid=strim(document.form1.up_id.value);
-					if(!cidRegExp.test(cid)){
-						message+='請輸入上層ID!\r\n';
-						ierror=1;
-					}		
-                  if (form1.name.value == "") {
-                        message+='請輸入系統名稱\r\n';
-						ierror=1;
-                    }
-					var csRegExp = /^\d{1,}$/;
-					cs=strim(document.form1.sortn.value);
-					if(!csRegExp.test(cs)){
-						message+='請輸入排序! 只能輸入數字\r\n';
-						ierror=1;
-					}				
-					var cpRegExp = /^(?=.*[a-zA-Z])(?=.*[.-_])(?!.*[^\x21-\x7e])(?!.*[\@#$%^&+=!]).{1,}$/;				
-					cp=strim(document.form1.programs_p.value);
-					if (form1.up_id.value !=0 && !cpRegExp.test(cp)) {
-                        message+='程式名稱 必須符合 大小寫英文數字 .-_ \r\n';
-						ierror=1;
-                    }				
-					if(ierror ==1){ 
-						alert(message);
-					}else{
-					document.form1.submit(); 
-					}
-                }
+<script language="JavaScript">
+function change_btn(st) {
+	if (st == 'c') {
+		document.getElementById("subm_1").innerHTML = '資料傳輸中';
+	} else {
+		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
+	}
+}
 
-            </script>
+function strim(str){
+     return str.replace(/(^\s*)|(\s*$)/g, "");
+}
+	function check_empty() {
+		ierror = 0;
+		message = '';
+	var cidRegExp = /^\d{1,}$/;
+	cid=strim(document.form1.up_id.value);
+	if(!cidRegExp.test(cid)){
+		message+='請輸入上層ID!\r\n';
+		ierror=1;
+	}		
+    if (form1.name.value == "") {
+		message+='請輸入系統名稱\r\n';
+		ierror=1;
+	}
+	var csRegExp = /^\d{1,}$/;
+	cs=strim(document.form1.sortn.value);
+	if(!csRegExp.test(cs)){
+		message+='請輸入排序! 只能輸入數字\r\n';
+		ierror=1;
+	}				
+	var cpRegExp = /^(?=.*[a-zA-Z])(?=.*[.-_])(?!.*[^\x21-\x7e])(?!.*[\@#$%^&+=!]).{1,}$/;				
+	cp=strim(document.form1.programs_p.value);
+	if (form1.up_id.value !=0 && !cpRegExp.test(cp)) {
+		message+='程式名稱 必須符合 大小寫英文數字 .-_ \r\n';
+		ierror=1;
+	}				
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');
+	} else {
+		document.form1.submit();
+		setTimeout("change_btn('c')", 500);
+	}
+}
+
+
+</script>
 
 </head>
 
@@ -114,7 +125,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
                 </tr>
                 <tr>
                     <td colspan="10" align="center">
-                        <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this.form)" /><input type="hidden" name="act" value="add" /></div>
+                        <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
                     </td>
                 </tr>
         </table>

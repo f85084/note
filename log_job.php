@@ -43,14 +43,12 @@ if(!empty($_GET['keyi'])){
 	$wherea[]="name like '%".m_esc($_GET['keyi'])."%'";
 	$lurl.="&keyi=".rawurlencode(ds($_GET['keyi']));
 	$logw[]="keyi = ".$keyi;
-
 }
 /*帶入尋找*/
 if(!empty($wherea)){
 	$where=" WHERE ".implode(' and ',$wherea);
 	$logws=implode(' and ',$logw);
 }
-
 /*寫入log*/
 $descrip="view log_job.php ".$logws;
 $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
@@ -84,7 +82,7 @@ $query_num = $db->query("SELECT COUNT(*) FROM job_log ".$where);
         <form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
                 <tr>
-                    <td class="tableTitle" colspan="10">資訊列表</td>
+                    <td class="tableTitle" colspan="10">排程執行記錄</td>
                 </tr>
                 <tr>
                     <td width="150" align="center"> 執行項目</td>
@@ -92,11 +90,7 @@ $query_num = $db->query("SELECT COUNT(*) FROM job_log ".$where);
                     <td width="150" align="center">執行時間</td>
                     <td>從 <input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d2" id="d2" class="date_pick" value="<?=$_GET['d2']?>" style="width:70px;" maxlength="10" /></td>					
                 </tr>
-<!--                     <td>
-                        <? if(in_array('a8',$p_array)){?><input type="button" value="新增文章" onclick="location.href='?<?=$_SERVER['QUERY_STRING'];?>&pg=aradd'" />
-                            <? }?>
-                    </td>
-                     -->
+
 					 <td colspan="9"><input type="submit" value="送出" /><input type="hidden" name="pid" value="<?=$_GET['pid']?>" /></td>
 
 					 </tr>

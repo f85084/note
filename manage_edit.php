@@ -106,66 +106,76 @@ $cd=str_pad($cday, 2, '0', STR_PAD_LEFT);
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <? include('include/css_js.php');?>
 <script language="JavaScript">
-        function strim(str){
-            return str.replace(/(^\s*)|(\s*$)/g, "");
-            	}
-        function check_empty() {
-            ierror = 0;
-            message = '';
-			
-             if (form1.group_uid.value == "") {
-                message+='請輸入群組\r\n';
-				ierror=1;
-						}		 									
-			var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
-            	cpw=strim(document.form1.pass_word.value);
-            if(form1.pass_word.value != "" && !cpwRegExp.test(cpw)){
-            	message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
-            	ierror=1;
-            			}	               
-			if(form1.pass_word.value != form1.pass_word2.value){
-				form1.pass_word.value=="";
-				form1.pass_word2.value=="";
-				form1.pass_word.focus();
-				message+='兩次輸入密碼不同\r\n';
-            	ierror=1;	 
-            			}	               
-            if (form1.name.value == "") {
-                message+='請輸入姓名\r\n';
-				ierror=1;
-						}				
-            if (form1.byear.value == "") {
-                message+='請輸入生日年分\r\n';
-				ierror=1;
-						}				
-            if (form1.bmonth.value == "") {
-                message+='請輸入生日月份\r\n';
-				ierror=1;
-						}				
-            if (form1.bday.value == "") {
-                message+='請輸入生日日期\r\n';
-				ierror=1;
-						}		 			
-			var cphRegExp = /^[0-9]{4}$/;
-            	cph=strim(document.form1.phone.value);
-            if(form1.phone.value != "" && !cphRegExp.test(cph)){
-            	message+='分機號碼必須為4位 數字\r\n';
-            	ierror=1;
-            			}		
-			var ccphRegExp = /^[09]{2}[0-9]{8}$/;
-            	ccph=strim(document.form1.cellphone.value);
-            if(form1.cellphone.value != "" && !ccphRegExp.test(ccph)){
-            	message+='手機號碼開頭必須為09 長度為10位數\r\n';
-            	ierror=1;
-            			}							
-					if(ierror ==1){ 
-						alert(message);
-					}else{
-					document.form1.submit(); 
-					}
-                }        
-            </script> 
-			
+function change_btn(st) {
+	if (st == 'c') {
+		document.getElementById("subm_1").innerHTML = '資料傳輸中';
+	} else {
+		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
+	}
+}		
+function strim(str){
+	return str.replace(/(^\s*)|(\s*$)/g, "");
+		}
+function check_empty() {
+	ierror = 0;
+	message = '';
+	
+	 if (form1.group_uid.value == "") {
+		message+='請輸入群組\r\n';
+		ierror=1;
+				}		 									
+	var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
+		cpw=strim(document.form1.pass_word.value);
+	if(form1.pass_word.value != "" && !cpwRegExp.test(cpw)){
+		message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
+		ierror=1;
+				}	               
+	if(form1.pass_word.value != form1.pass_word2.value){
+		form1.pass_word.value=="";
+		form1.pass_word2.value=="";
+		form1.pass_word.focus();
+		message+='兩次輸入密碼不同\r\n';
+		ierror=1;	 
+				}	               
+	if (form1.name.value == "") {
+		message+='請輸入姓名\r\n';
+		ierror=1;
+				}				
+	if (form1.byear.value == "") {
+		message+='請輸入生日年分\r\n';
+		ierror=1;
+				}				
+	if (form1.bmonth.value == "") {
+		message+='請輸入生日月份\r\n';
+		ierror=1;
+				}				
+	if (form1.bday.value == "") {
+		message+='請輸入生日日期\r\n';
+		ierror=1;
+				}		 			
+	var cphRegExp = /^[0-9]{4}$/;
+		cph=strim(document.form1.phone.value);
+	if(form1.phone.value != "" && !cphRegExp.test(cph)){
+		message+='分機號碼必須為4位 數字\r\n';
+		ierror=1;
+				}		
+	var ccphRegExp = /^[09]{2}[0-9]{8}$/;
+		ccph=strim(document.form1.cellphone.value);
+	if(form1.cellphone.value != "" && !ccphRegExp.test(ccph)){
+		message+='手機號碼開頭必須為09 長度為10位數\r\n';
+		ierror=1;
+				}							
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');
+	} else {
+		document.form1.submit();
+		setTimeout("change_btn('c')", 500);
+	}
+}      
+	</script> 
+	
 </head>
     <body>
 
@@ -355,7 +365,7 @@ $cd=str_pad($cday, 2, '0', STR_PAD_LEFT);
 			</tr>				
             <tr>
                 <td colspan="10" align="center">
-                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this.form)" /><input type="hidden" name="act" value="add" /></div>
+                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
                  </td>
             </tr>
         </table>

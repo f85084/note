@@ -8,9 +8,6 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
-//$wherea[]="del = 'N'";
-//$wherea[]="type='2'";
-
 
 /*選擇日期*/
 if(!empty($_GET['d1']) && !empty($_GET['d2'])){
@@ -76,7 +73,7 @@ if(!empty($wherea)){
 /*寫入log*/
 $descrip="view log_act.php ".$logws;
 $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
-$rownum = 20; 
+$rownum = 50; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
 $querya=$db->query("SELECT id,tid,pid,uid,aid,atime,ftime,description FROM  admin_act_log $where  order by atime desc"." LIMIT $TP, $rownum");
@@ -140,7 +137,7 @@ $use_act=array(0 => '查詢', 1 => '新增' , 2 => '修改' , 3 => '刪除');
         <form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
                 <tr>
-                    <td class="tableTitle" colspan="10">資訊列表</td>
+                    <td class="tableTitle" colspan="10">後台操作紀錄</td>
                 </tr>
                 <tr>
                     <td width="150" align="center">關鍵字(描述)</td>

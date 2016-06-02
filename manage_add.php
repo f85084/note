@@ -15,10 +15,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$user_name=$_POST['user_name'];
 	$pass_word=md5($_POST['pass_word']);	
 	$name=$_POST['name'];
-	$year = $_POST['year'];
-	$month = $_POST['month'];
-	$day =$_POST['day'];
-	$birthday = date("$year,$month,$day");
+	$byear = $_POST['byear'];
+	$bmonth = $_POST['bmonth'];
+	$bday =$_POST['bday'];
+	$birthday = date("$byear,$bmonth,$bday");
 	$sex=ck_num($_POST['sex'])?$_POST['sex']:0;
 	$blood=ck_num($_POST['blood'])?$_POST['blood']:0;
 	$marry=ck_num($_POST['marry'])?$_POST['marry']:0;
@@ -36,10 +36,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if($res_rid!=0){$error.='帳號已有人使用!\r\n';}
 	if(!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pass_word'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
-	if(empty($year)){$error.='請輸入生日年分!\r\n';}
-	if(empty($month)){$error.='請輸入生日月份!\r\n';}
-	if(empty($day)){$error.='請輸入生日日期!\r\n';}
- 	if(!empty($year)&&!empty($month)&&!empty($day)){if(!checkdate($month,$day,$year)){$error.='生日沒有這一天喔!\r\n';}  } 
+	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
+	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
+	if(empty($bday)){$error.='請輸入生日日期!\r\n';}
+ 	if(!empty($byear)&&!empty($bmonth)&&!empty($bday)){if(!checkdate($bmonth,$bday,$byear)){$error.='生日沒有這一天喔!\r\n';}  } 
 	if(is_null($sex)){$error.='請輸入性別!\r\n';}
 	if(is_null($blood)){$error.='請輸入血型\r\n';}
 	if(is_null($marry)){$error.='請輸入婚姻!\r\n';}
@@ -72,71 +72,79 @@ $admin_marry=array(0=>'未婚',1=>'已婚');
 
 <? include('include/css_js.php');?>
 <script language="JavaScript">
-        function strim(str){
-            return str.replace(/(^\s*)|(\s*$)/g, "");
-            	}
-        function check_empty() {
-            ierror = 0;
-            message = '';
-			
-            if (form1.group_uid.value == "") {
-                message+='請輸入群組\r\n';
-				ierror=1;
-						}				
-            var cunRegExp = /^(?=.*[a-zA-Z])(?!.*[^\x21-\x7e])(?!.*[\@#$%^&+=!]).{1,}$/;				
-            	cun=strim(document.form1.user_name.value);
-            if (!cunRegExp.test(cun)) {
-                message+='帳號 必須符合 大小寫英文數字\r\n';
-            	ierror=1;
-						}									
-		var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
-            	cpw=strim(document.form1.pass_word.value);
-            if(!cpwRegExp.test(cpw)){
-            	message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
-            	ierror=1;
-            			}	               
-			if(form1.pass_word.value != form1.pass_word2.value){
-				form1.pass_word.value=="";
-				form1.pass_word2.value=="";
-				form1.pass_word.focus();
-				message+='兩次輸入密碼不同\r\n';
-            	ierror=1;	  
-            			}	              
-            if (form1.name.value == "") {
-                message+='請輸入姓名\r\n';
-				ierror=1;
-						}				
-            if (form1.year.value == "") {
-                message+='請輸入生日年分\r\n';
-				ierror=1;
-						}				
-            if (form1.month.value == "") {
-                message+='請輸入生日月份\r\n';
-				ierror=1;
-						}				
-            if (form1.day.value == "") {
-                message+='請輸入生日日期\r\n';
-				ierror=1;
-						}				
-            if (form1.sex.value == "") {
-                message+='請輸入性別\r\n';
-				ierror=1;
-						}						
-            if (form1.blood.value == "") {
-                message+='請輸入血型\r\n';
-				ierror=1;
-						}						
-            if (form1.marry.value == "") {
-                message+='請輸入婚姻\r\n';
-				ierror=1;
-						}						
-            if(ierror ==1){ 
-            	alert(message);
-            			}else{
-            	document.form1.submit(); 
-            			}
-                }         
-            </script> 
+function change_btn(st) {
+	if (st == 'c') {
+		document.getElementById("subm_1").innerHTML = '資料傳輸中';
+	} else {
+		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
+	}
+}	
+function strim(str){
+	return str.replace(/(^\s*)|(\s*$)/g, "");
+		}
+function check_empty() {
+	ierror = 0;
+	message = '';
+
+	if (form1.group_uid.value == "") {
+		message+='請選擇群組\r\n';
+		ierror=1;
+				}				
+	if (form1.name.value == "") {
+		message+='請輸入帳號\r\n';
+		ierror=1;
+				}				
+var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
+		cpw=strim(document.form1.pass_word.value);
+	if(!cpwRegExp.test(cpw)){
+		message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
+		ierror=1;
+				}	               
+	if(form1.pass_word.value != form1.pass_word2.value){
+		form1.pass_word.value=="";
+		form1.pass_word2.value=="";
+		form1.pass_word.focus();
+		message+='兩次輸入密碼不同\r\n';
+		ierror=1;	  
+				}	              
+	if (form1.name.value == "") {
+		message+='請輸入姓名\r\n';
+		ierror=1;
+				}				
+	if (form1.byear.value == "") {
+		message+='請選擇生日年分\r\n';
+		ierror=1;
+				}				
+	if (form1.bmonth.value == "") {
+		message+='請選擇生日月份\r\n';
+		ierror=1;
+				}				
+	if (form1.bday.value == "") {
+		message+='請選擇生日日期\r\n';
+		ierror=1;
+				}	
+	if (form1.sex.value == "") {
+		message+='請選擇性別\r\n';
+		ierror=1;
+				}	
+	if (form1.blood.value == "") {
+		message+='請選擇血型\r\n';
+		ierror=1;
+				}	
+	if (form1.marry.value == "") {
+		message+='請選擇婚姻\r\n';
+		ierror=1;
+				}							
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');
+	} else {
+		document.form1.submit();
+		setTimeout("change_btn('c')", 500);
+	}
+}     
+	</script> 
 </head>
 
 <body>
@@ -178,20 +186,20 @@ $admin_marry=array(0=>'未婚',1=>'已婚');
             <tr>
                 <td align="center">生日</td>
                     <td>
-					<select name="year" id="year">
+					<select name="byear" id="byear">
 					<option value=""></option>
 					<? for ($i=1960; $i<=2016; $i++) {?>
 					<option value="<?=$i?>"><?= $i; ?></option>
 					<? } ?>
 					</select> 年
 
-                     <select name="month" id="month">
+                     <select name="bmonth" id="bmonth">
 					<option value=""></option>
 					<? for ($i=1; $i<=12; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
 					</select>月
-                    <select name="day" id="day">
+                    <select name="bday" id="bday">
 					<option value=""></option>
 					<? for ($i=1; $i<=31; $i++) {?>
 					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
@@ -242,7 +250,7 @@ $admin_marry=array(0=>'未婚',1=>'已婚');
             </tr>
             <tr>
                 <td colspan="10" align="center">
-                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this.form)" /><input type="hidden" name="act" value="add" /></div>
+                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
                  </td>
             </tr>
         </table>

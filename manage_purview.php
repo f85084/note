@@ -32,14 +32,15 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
  		$error='ok';	
 	 	}	
 	}	
-    $querya = $db->query("SELECT id,name FROM b_s_group order by id asc");
-	$query_all = $db->query("SELECT uid,group_uid,user_name,thor FROM admin_info WHERE uid='35'");
-	$all_id = $db->fetch_array($query_all);
-	$all_array=explode(',',$all_id['thor']);
+	/* $querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group  where id='$sld' || up_id='$sld'  order by sortn,id"); */
+     $querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group   order by sortn,id");
+	 $temp=array();
+	 $temps=array();
 
 $thors=explode(',',$da['thor']);  
 $admin_group=array(0=>'管理者',1=>'開發人員',2=>'編輯人員',3=>'網頁設計師')	;
 $ad_g=$admin_group[$da['group_uid']];
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -47,26 +48,28 @@ $ad_g=$admin_group[$da['group_uid']];
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <? include('include/css_js.php');?>
 <script language="JavaScript">
-        function strim(str){
-            return str.replace(/(^\s*)|(\s*$)/g, "");
-            	}
-        function check_empty() {
-            ierror = 0;
-            message = '';			
-																
-					if(ierror ==1){ 
-						alert(message);
-					}else{
-					document.form1.submit(); 
-					}
-                }        
-            </script> 
-			
+function strim(str){
+	return str.replace(/(^\s*)|(\s*$)/g, "");
+		}
+function check_empty() {
+	ierror = 0;
+	message = '';			
+														
+			if(ierror ==1){ 
+				alert(message);
+			}else{
+			document.form1.submit(); 
+			}
+		}        
+</script> 
 </head>
     <body>
     <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">	
 		<table cellpadding="0" cellspacing="0" class="menutable">
 			<tr>	
+			    <td class="tableTitle" colspan="10">權限編輯</td>
+			</tr>
+			<tr>
 				<td align="center">姓名</td>
                 <td align="center"><?=$da['name']?></td>
                 <td align="center">群組</td>
@@ -82,43 +85,72 @@ $ad_g=$admin_group[$da['group_uid']];
         </table>
         <table cellpadding="0" cellspacing="0" class="menutable">
             <tr>
-                <td align="center" width="10%">id</td>
-                <td align="center" width="20%">系統名稱</td>
-				<td align="center" width="70%">權限</td> 				
+                <td align="center" width="15%">id</td>
+                <td align="center" width="25%">系統名稱</td>
+				<td align="center" width="60%">權限</td> 				
             </tr>
             <? while($ld = $db->fetch_array($querya)){?>
-                <tr class="chbg">
-				<td align="center"><?=ht($ld['id'])?><input type="hidden" name="id" value="<?=$ld['id']?>"></td>
-				<td align="center"><?=$ld['name']?></td>
-			   <td>
-			 <? $pid=ht($ld['id']); 
+	        <?if($ld['up_id']==0){
+			$temp[]=$ld;
+		}else{
+			$temps[$ld['up_id']][]=$ld;
+		}
+	 }?>
+				<?
+//print_r($temp); print_r($temps);
+foreach($temp as $v){?>
+		<td align="center" bgcolor="#FFF2FF"><?=$v['id']?></td>	
+		<td align="center" bgcolor="#FFF2FF"><?=$v['name']?></td>
+			   <td bgcolor="#FFF2FF">
+			 <? $pid=$v['id']; 
 					if(in_array($pid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$pid?>"<?=in_array($pid,$thors)? ' checked="checked"': '';?> >
 					<?='預覽'?>&nbsp;&nbsp;		
 						<? }?>	
-			 <? $apid='a'.ht($ld['id']); 
+			 <? $apid='a'.$v['id']; 
 					if(in_array($apid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$apid?>"<?=in_array($apid,$thors)? ' checked="checked"': '';?>  >
 					<?='新增'?>&nbsp;&nbsp;		
 						<? }?>	
-			 <? $epid='e'.ht($ld['id']); 
+			 <? $epid='e'.$v['id']; 
 					if(in_array($epid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$epid?>"<?=in_array($epid,$thors)? ' checked="checked"': '';?>  >
 					<?='編輯'?>&nbsp;&nbsp;		
-						<? }?>	
-			 <? $dpid='d'.ht($ld['id']); 
-					if(in_array($dpid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$dpid?>"<?=in_array($dpid,$thors)? ' checked="checked"': '';?>  >
-					<?='刪除'?>&nbsp;&nbsp;		
-						<? }?>	
-			 <? $ppid='p'.ht($ld['id']); 
+						<? }?>		
+			 <? $ppid='p'.$v['id']; 
 					if(in_array($ppid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$ppid?>"<?=in_array($ppid,$thors)? ' checked="checked"': '';?>  >
 					<?='權限'?>&nbsp;&nbsp;		
 						<? }?>	
-			 <? $allpid='all'.ht($ld['id']).'l'; 
+			 <? $allpid='all'.$v['id'].'l'; 
 					if(in_array($allpid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$allpid?>"<?=in_array($allpid,$thors)? ' checked="checked"': '';?>  >
 					<?='全部'?>&nbsp;&nbsp;		
 						<? }?>	
 			</td> 
                 </tr>
-                <? }?>
-
+	<?foreach($temps[$v['id']] as $s){?>
+		<td align="center"><?=$s['id']?></td>	
+		<td align="center"><?=$s['name']?></td>
+			   <td>
+			 <? $pid=$s['id']; 
+					if(in_array($pid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$pid?>"<?=in_array($pid,$thors)? ' checked="checked"': '';?> >
+					<?='預覽'?>&nbsp;&nbsp;		
+						<? }?>	
+			 <? $apid='a'.$s['id']; 
+					if(in_array($apid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$apid?>"<?=in_array($apid,$thors)? ' checked="checked"': '';?>  >
+					<?='新增'?>&nbsp;&nbsp;		
+						<? }?>	
+			 <? $epid='e'.$s['id']; 
+					if(in_array($epid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$epid?>"<?=in_array($epid,$thors)? ' checked="checked"': '';?>  >
+					<?='編輯'?>&nbsp;&nbsp;		
+						<? }?>		
+			 <? $ppid='p'.$s['id']; 
+					if(in_array($ppid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$ppid?>"<?=in_array($ppid,$thors)? ' checked="checked"': '';?>  >
+					<?='權限'?>&nbsp;&nbsp;		
+						<? }?>	
+			 <? $allpid='all'.$s['id'].'l'; 
+					if(in_array($allpid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$allpid?>"<?=in_array($allpid,$thors)? ' checked="checked"': '';?>  >
+					<?='全部'?>&nbsp;&nbsp;		
+						<? }?>	
+			</td> 
+                </tr>
+	<? }}?>
 		    <tr>
                 <td colspan="10" align="center">
                 <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this.form)" /><input type="hidden" name="act" value="add" /></div>
@@ -137,6 +169,6 @@ alert('<?=$error?>');
 history.go(-1)
 </script>
 <? }?>
-    </body>
+</body>
 
-    </html>
+</html>

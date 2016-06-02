@@ -8,13 +8,6 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
-//$wherea[]="del = 'N'";
-//$wherea[]="type='2'";
-/* if(!empty($_SESSION['admin_uid'])){
-	$query = $db->query("SELECT uid,group_uid,user_name,pass_word,name,birthday,phone,cellphone,thor FROM admin_info WHERE uid='$_SESSION[admin_uid]' and del='N'");
-	$admin_d = $db->fetch_array($query);
-} */
-
 
 /*選擇日期*/
 if(!empty($_GET['d1']) && !empty($_GET['d2'])){
@@ -119,7 +112,7 @@ $use_in=array(0=>'失敗', 1=>'成功');
         <form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
                 <tr>
-                    <td class="tableTitle" colspan="10">資訊列表</td>
+                    <td class="tableTitle" colspan="10">後台登入紀錄</td>
                 </tr>
 	
                 <tr>                   

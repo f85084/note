@@ -9,7 +9,7 @@ $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
 if(!empty($_SESSION['admin_uid'])){
-	$query = $db->query("SELECT uid,group_uid,user_name,pass_word,name,birthday,phone,cellphone,thor FROM admin_info WHERE uid='$_SESSION[admin_uid]' and del='N'");
+	$query = $db->query("SELECT uid,group_uid,user_name,pass_word,name,birthday,phone,cellphone,thor,email FROM admin_info WHERE uid='$_SESSION[admin_uid]' and del='N'");
 	$admin_d = $db->fetch_array($query);
 }
 $rownum = 5; 
@@ -35,76 +35,110 @@ $use_in=array(0=>'失敗', 1=>'成功');
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+	
 <head>
- <script>
- 
- function check_pw(pw) {
- 	var re = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
-    if(Regist.pass_word.value != "" && !re.test(pw.value)){
-        alert("密碼須6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號");
-        return false;
-    }
-    return true;    
- }
- function ck_pe(pe) {
- 	var re = /^\d{4}$/;	
- 	if (!re.test(pe.value)){
- 		alert("請輸入分機號碼入長度為 4");		
- 	}
- 	else 
- 		return true;	
- }
-  function ck_bd(bd) {
-	var re = /^([0-9]{4})[\-]{1}([0-9]{2})[\-]{1}([0-9]{2})$/
-    if(Regist.birthday.value != "" && !re.test(bd.value)){
-		message += '日期輸入錯誤喔 \r\n';
-        alert('日期輸入錯誤喔 \r\n');
-        return false;
-    }
-    return true;    
- }
- function ck_ce(ce) {
- 	var re = /^[09]{2}[0-9]{8}$/;
- 	if (!re.test(ce.value)){
- 		alert('請輸入手機號碼，開頭為09 長度為10位數');		
- 	}
- 	else 
- 		return true;		
- }
- function ck_pw(){
- /* 	if(Regist.pass_word.value==""){
- 		alert("請輸入密碼");
- 		Regist.pass_word.focus();
- 		return false;
- 				}
- 	if(Regist.pass_word2.value==""){
- 		alert("請再次輸入密碼");
- 		Regist.pass_word2.focus();
- 		return false;			
- 				}   */
- 	if(Regist.pass_word.value != Regist.pass_word2.value){
- 		alert("兩次輸入密碼不同");
- 		Regist.pass_word.value=="";
- 		Regist.pass_word2.value=="";
- 		Regist.pass_word.focus();
- 		return false;			
- 					}
- 		return true;			
- 			}
- 	
- </script>
-<script>
-function check_fm(form) {
- 	if (!ck_pw(form.pass_word)) return;
- 	if (!ck_bd(form.birthday)) return;
-	if (!ck_pe(form.phone)) return;
-	if (!ck_ce(form.cellphone)) return;	
-	if (!check_pw(form.pass_word)) return;
-	//alert ("成功！\n表單即將送出！！！");
-	document.Regist.submit();	// Submit form
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script language="JavaScript">
+var is_auth_passed = false;	
+function ck_opw() {   
+	var old_pass_word = $('#old_pass_word').val(); //取得欄位的值	
+		//alert(is_auth_passed);
+	 return is_auth_passed;
 }
 </script>
-
+<script language="JavaScript">
+        function strim(str){
+            return str.replace(/(^\s*)|(\s*$)/g, "");
+            	}
+       function check_empty() {
+            ierror = 0;
+            message = '';
+			
+	  	var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
+            	cpw=strim(document.form1.pass_word.value);
+            if(form1.pass_word.value != "" && !cpwRegExp.test(cpw)){
+            	message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
+            	ierror=1;
+            			}	               
+			if(form1.pass_word.value != form1.pass_word2.value){
+				form1.pass_word.value=="";
+				form1.pass_word2.value=="";
+				form1.pass_word.focus();
+				message+='兩次輸入密碼不同\r\n';
+            	ierror=1;	 
+            			}
+			
+            if (form1.name.value.length < 2 ) {
+                message+='請輸入姓名 至少兩個字元\r\n';
+				ierror=1;
+						}				
+		/*var celRegExp =  /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+            	cel=strim(document.form1.email.value );
+            if(!celRegExp.test(cel)){
+            	message+='請輸入信箱 必須有@ \r\n';
+            	ierror=1;
+            			}				
+		var cbdRegExp =  /^([0-9]{4})[\-]{1}([0-9]{2})[\-]{1}([0-9]{2})$/;
+            	cbd=strim(document.form1.birthday.value );
+            if(!cbdRegExp.test(cbd)){
+            	message+='生日輸入錯誤喔 \r\n';
+            	ierror=1;
+            			}	
+		var cpeRegExp =  /^\d{4}$/;
+            	cpe=strim(document.form1.phone.value);
+            if(!cpeRegExp.test(cpe)){
+            	message+='請輸入分機號碼入長度為 4\r\n';
+            	ierror=1;
+				}
+			var cceRegExp =  /^[09]{2}[0-9]{8}$/;
+            	cce=strim(document.form1.cellphone.value );
+            if(!cceRegExp.test(cce)){
+            	message+='請輸入手機號碼，開頭為09 長度為10位數\r\n';
+            	ierror=1;
+            			}				
+            */				 				
+            if(ierror ==1){ 
+            	alert(message);
+            }else{
+				//以下為ajax部分
+				if(form1.pass_word.value == form1.pass_word2.value && form1.pass_word.value!='' && form1.pass_word2.value!='' && ierror==0){
+					if($('#old_pass_word').val() == ""){
+						ierror=1; message+='請輸入舊密碼!\r\n';
+					}else{
+						var old_pass_word = $('#old_pass_word').val();
+						$.ajax({
+							 url : "admin_edit_ck.php", //要執行的那個php檔案
+							 data : { old_pass_word : old_pass_word}, //要傳輸的資料
+							 type : "POST", //傳輸的方式
+							 dataType : "text", //回傳的資料格式
+							 error : function(xhr){ //傳送失敗時可以做的動作
+								//alert('Ajax request 發生錯誤');
+								   //is_auth_passed = false;
+								 },
+							 success : function(response){ //傳送成功時要做的動作 ()裡面是變數
+								if  (response == '1') {
+									//is_auth_passed = true;
+									//alert(is_auth_passed);	
+									//alert('1');
+									document.form1.submit(); 						
+								} else {
+									//is_auth_passed = false;
+									//alert(is_auth_passed);
+									alert('舊密碼錯誤！');
+								}
+								//alert(response);
+								}
+							});		
+					}
+				}else{//如果不改密碼就不檢查
+					document.form1.submit(); 
+				}
+									
+             }
+          }         
+            </script> 
+			
     <style type="text/css">
         @import "include/datepick/jquery.datepick.css";
     </style>
@@ -112,53 +146,59 @@ function check_fm(form) {
     <script type="text/javascript" src="include/datepick/jquery.datepick-zh-TW.js"></script>
 </head>	
 <body>
-	    <div class="right_b">
-        <form name="Regist" id="form1" action="admin_edit_upload.php" enctype="multipart/form-data" method="post" onsubmit="return ck_pw();">
+ <div class="right_b">
+        <form name="form1" id="form1" action="admin_edit_upload.php" enctype="multipart/form-data" method="post" onSubmit="" >
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
-			
                 <tr>
-                    <td class="tableTitle" colspan="10">基本資料修改</td>
+                    <td class="tableTitle" colspan="10">個人資料修改</td>
                 </tr>
 				<tr>
                     <td width="150" align="center">會員編號</td>
-					 <td><?=$admin_d['uid']?></td>.
-					 <input type="hidden" name="uid" value="<?=$admin_d['uid']?>">
+					<td><?=$admin_d['uid']?></td>
+					<input type="hidden" name="uid" value="<?=$admin_d['uid']?>">
 				</tr>
                 <tr>
                     <td width="150" align="center">登入帳號</td>
-					 <td><?=$admin_d['user_name']?></td>
-					 <input type="hidden" name="user_name" value="<?=$admin_d['user_name']?>">
+					<td><?=$admin_d['user_name']?></td>
+					<input type="hidden" name="user_name" value="<?=$admin_d['user_name']?>">
 				</tr>
 				<tr>					 
-				  <td width="150" align="center">修改密碼</td>
-					 <td><input type="password" name="pass_word" id="pass_word"  placeholder="修改密碼">  </td>
+				    <td width="150" align="center">舊密碼</td>
+					<td><input type="password" name="old_pass_word" id="old_pass_word"  placeholder="舊密碼">  </td>
 				</tr>				
 				<tr>					 
-				  <td width="150" align="center">再重複一次密碼</td>
+				    <td width="150" align="center">修改密碼</td>
+					<td><input type="password" name="pass_word" id="pass_word"  placeholder="修改密碼">  </td>
+				</tr>				
+				<tr>					 
+				     <td width="150" align="center">再重複一次密碼</td>
 					 <td><input type="password" name="pass_word2"   placeholder="再重複一次密碼" >  </td>
 				</tr>
 				<tr>
                     <td width="150" align="center">姓名</td> 
-				 <td><input type="text" name="name"   placeholder="姓名" value="<?=$admin_d['name']?>"> </td>
+				    <td><input type="text" name="name"  id="name" placeholder="姓名" value="<?=$admin_d['name']?>"> </td>
 				 </tr>
+                    <td width="150" align="center">信箱</td> 
+				    <td><input type="text" name="email" id="email"  placeholder="信箱" value="<?=$admin_d['email']?>"> </td>
+				</tr>
 				<tr>
                     <td width="150" align="center">生日</td>
-					 <td><input type="text" name="birthday"  class="date_pick"  placeholder="生日" value="<?=$admin_d['birthday']?>"> </td>
+					<td><input type="text" name="birthday" id="birthday"  class="date_pick"  placeholder="生日" value="<?=$admin_d['birthday']?>"> </td>
 				</tr>
 				<tr>				
-                <td width="150" align="center">分機</td> 
-				 <td><input type="text" name="phone"   placeholder="分機" value="<?=$admin_d['phone']?>"> </td>
+					<td width="150" align="center">分機</td> 
+					<td><input type="text" name="phone" id="phone"   placeholder="分機" value="<?=$admin_d['phone']?>"> </td>
 				 </tr>
 				<tr>				 
-                <td width="150" align="center">手機</td> 
-				 <td><input type="text" name="cellphone"   placeholder="手機" value="<?=$admin_d['cellphone']?>"> </td>	
+					<td width="150" align="center">手機</td> 
+					<td><input type="text" name="cellphone" id="cellphone"   placeholder="手機" value="<?=$admin_d['cellphone']?>"> </td>	
 				 </tr>
 				<tr>
-				 <td colspan="9"><input type=button value="送出" onClick="check_fm(this.form)" /><input type="hidden" name="pid" value="<?=ht($_GET['pid'])?>" /><input type="hidden" name="action" value="update" /></td>
+					<td colspan="9"><input type=button value="送出" onClick="check_empty(this.form)" /><input type="hidden" name="pid" value="<?=ht($_GET['pid'])?>" /><input type="hidden" name="action" value="update" /></td>
                 </tr> 
             </table>
         </form>
-		    </div>
+</div>
  <div class="right_b">
 	            <form name="form2" id="form2" action="" enctype="multipart/form-data" method="post" onsubmit="">
 	                <table cellpadding="0" cellspacing="0" class="menutable" height="100%">

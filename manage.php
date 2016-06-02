@@ -1,4 +1,4 @@
-<? // 人員資料列表
+<? // 管理員列表
 $_SESSION['r_url']=$_SERVER['QUERY_STRING'];
 $thorid=38;
 if(!in_array($thorid,$p_array)){header("Location:index.php"); exit();}
@@ -46,7 +46,7 @@ if(!empty($wherea)){
 $rownum = 20; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
-$querya=$db->query("SELECT uid,group_uid,user_name,pass_word,name,birthday,phone,cellphone,thor,remark,del,is_lock FROM admin_info  $where  order by uid asc"." LIMIT $TP, $rownum");
+$querya=$db->query("SELECT uid,group_uid,user_name,pass_word,name,birthday,phone,cellphone,thor,remark,del,is_lock FROM admin_info  $where  order by  del='Y',uid  DESC"." LIMIT $TP, $rownum");
 
 
 /*寫入log*/
@@ -72,18 +72,11 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
 </head>
 
 <body>
-
-    <style type="text/css">
-        @import "include/datepick/jquery.datepick.css";
-		    <script type="text/javascript" src="include/datepick/jquery.datepick.js"></script>
-    <script type="text/javascript" src="include/datepick/jquery.datepick-zh-TW.js"></script>
-    </style>
-	
     <div class="right_b">
         <form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
                 <tr>
-                    <td class="tableTitle" colspan="10">資訊列表</td>
+                    <td class="tableTitle" colspan="10">管理員列表</td>
                 </tr>
                 <tr>
                     <td width="150" align="center">搜尋(帳號)</td>
@@ -119,9 +112,9 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
                     <td>
 					</td>
 					<td>
-					     <? if(in_array('a38',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:manage_add.php','800px','500px','iframe');" />
+					     <? if(in_array('a38',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:manage_add.php','800px','490px','iframe');" />
                           <? }?>
-						 <? if(in_array('p38',$p_array)){?><input type="button" value="新增權限頁面" onclick="dialog('頁面權限','iframe:manage_purview_page.php','800px','350px','iframe');" />
+						 <? if(in_array('p38',$p_array)){?><input type="button" value="新增權限頁面" onclick="dialog('頁面權限','iframe:manage_purview_page.php','800px','315px','iframe');" />
 						    <input type="hidden" name="uid" value="<?=$da['uid']?>">
                             <? }?>	
                     </td>
@@ -131,8 +124,6 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
         </form>
     </div>
  <div class="right_b">
-  
-	            <form name="form2" id="form2" action="" enctype="multipart/form-data" method="post" onsubmit="">
 	                <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
 						<? if($product_page_num > 0){?>
                 <tr>
@@ -209,11 +200,11 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
 											
 	    							    </td>								
                     <td align="center">
-                    <? if(in_array('p38',$p_array)){?><input type="button" onclick="dialog('權限','iframe:manage_purview.php?uid=<?=ht($al['uid'])?>','800px','380','iframe');" value="權限" />
+                    <? if(in_array('p38',$p_array)){?><input type="button" onclick="dialog('權限','iframe:manage_purview.php?uid=<?=ht($al['uid'])?>','700px','850px','iframe');" value="權限" />
                          <? }?>										
-                    <? if(in_array('e38',$p_array)){?><input type="button" onclick="dialog('修改','iframe:manage_edit.php?uid=<?=ht($al['uid'])?>','800px','470px','iframe');" value="修改" />
+                    <? if(in_array('e38',$p_array)){?><input type="button" onclick="dialog('修改','iframe:manage_edit.php?uid=<?=ht($al['uid'])?>','800px','760px','iframe');" value="修改" />
                          <? }?>
-                    <? if(in_array('d38',$p_array)){?><input type="button" onclick="dialog('刪除','iframe:manage_del.php?uid=<?=ht($al['uid'])?>','800px','380','iframe');" value="刪除" />
+                    <? if(in_array('d38',$p_array)){?><input type="button" onclick="dialog('刪除','iframe:manage_del.php?uid=<?=ht($al['uid'])?>','800px','600','iframe');" value="刪除" />
                           <? }?>
                   </td>										
 	                                </tr>
@@ -239,18 +230,7 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
                                         </td>
                                     </tr>
                                     <? }?>
-	                </table>
-	            </form>
+	                </table>           
 	    		    </div> 
-            <script type="text/javascript">
-                $(".date_pick").datepick({
-                    dateFormat: 'yy-mm-dd',
-                    numberOfMonths: 1,
-                    showCurrentAtPos: 0,
-                    showOn: 'both',
-                    buttonImageOnly: true,
-                    buttonImage: 'include/datepick/calendar.gif'
-                });
-            </script>
 </body>
 </html>
