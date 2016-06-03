@@ -51,25 +51,15 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 			$error='ok';	 
 	 	}	
 	}	
-
 $admin_group=array(0=>'管理者',1=>'開發人員',2=>'編輯人員',3=>'網頁設計師')	;
 $admin_sex=array(0=>'女',1=>'男');
 $admin_blood=array(0=>'A',1=>'B',2=>'AB',3=>'O');
 $admin_marry=array(0=>'未婚',1=>'已婚');
 ?>
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style type="text/css">
-        @import "include/datepick/jquery.datepick.css";
-    </style>
-    <script type="text/javascript" src="include/datepick/jquery.datepick.js"></script>
-    <script type="text/javascript" src="include/datepick/jquery.datepick-zh-TW.js"></script>
-
 <? include('include/css_js.php');?>
 <script language="JavaScript">
 function change_btn(st) {
@@ -144,117 +134,114 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		setTimeout("change_btn('c')", 500);
 	}
 }     
-	</script> 
+</script> 
 </head>
-
 <body>
+<form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
+	<table cellpadding="0" cellspacing="0" class="menutable">
+		<tr>
+			<td class="tableTitle" colspan="10">新增人員</td>
+		</tr>
 
-    <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
-        <table cellpadding="0" cellspacing="0" class="menutable">
-            <tr>
-                <td class="tableTitle" colspan="10">新增人員</td>
-            </tr>
-
-            <tr>
-                <td align="center">群組</td>
-				<td>
-					<select name="group_uid" id="group_uid">
-					<option value="" >請選擇群組</option>
-					<?foreach($admin_group as $key => $value){?>
-					<option value="<?=$key?>"><?= $value; ?></option>					
-					<?}?>
-					</select>
-					<font color="#FF0000">*</font>	
-				   </td> 
-				 </tr>
-            <tr>
-				<td align="center">帳號</td>
-				<td><input type="text" name="user_name" id="user_name" style="width:200px;" /><font color="#FF0000">*</font>	</td>
-            </tr>
-            <tr>
-                <td align="center">密碼</td>
-                <td><input type="password"  name="pass_word" id="pass_word"  style="width:200px;" /><font color="#FF0000">*</font>	</td>
-			</tr>
-			<tr>					 
-				<td width="150" align="center">再重複一次密碼</td>
-				<td><input type="password" name="pass_word2" id="pass_word2" style="width:200px;"> <font color="#FF0000">*</font>	</td>
-			</tr>					
-            <tr>				
-				<td align="center">姓名</td>
-				<td><input type="text" name="name" id="name" style="width:200px;" /> <font color="#FF0000">*</font>	</td>				
-			</tr>
-            <tr>
-                <td align="center">生日</td>
-                    <td>
-					<select name="byear" id="byear">
+		<tr>
+			<td align="center">群組</td>
+			<td>
+				<select name="group_uid" id="group_uid">
+				<option value="" >請選擇群組</option>
+				<?foreach($admin_group as $key => $value){?>
+				<option value="<?=$key?>"><?= $value; ?></option>					
+				<?}?>
+				</select>
+				<font color="#FF0000">*</font>	
+			   </td> 
+			 </tr>
+		<tr>
+			<td align="center">帳號</td>
+			<td><input type="text" name="user_name" id="user_name" style="width:200px;" /><font color="#FF0000">*</font>	</td>
+		</tr>
+		<tr>
+			<td align="center">密碼</td>
+			<td><input type="password"  name="pass_word" id="pass_word"  style="width:200px;" /><font color="#FF0000">*</font>	</td>
+		</tr>
+		<tr>					 
+			<td width="150" align="center">再重複一次密碼</td>
+			<td><input type="password" name="pass_word2" id="pass_word2" style="width:200px;"> <font color="#FF0000">*</font>	</td>
+		</tr>					
+		<tr>				
+			<td align="center">姓名</td>
+			<td><input type="text" name="name" id="name" style="width:200px;" /> <font color="#FF0000">*</font>	</td>				
+		</tr>
+		<tr>
+			<td align="center">生日</td>
+			<td>
+				<select name="byear" id="byear">
 					<option value=""></option>
 					<? for ($i=1960; $i<=2016; $i++) {?>
 					<option value="<?=$i?>"><?= $i; ?></option>
 					<? } ?>
-					</select> 年
-
-                     <select name="bmonth" id="bmonth">
+				</select> 年
+				<select name="bmonth" id="bmonth">
 					<option value=""></option>
 					<? for ($i=1; $i<=12; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>月
-                    <select name="bday" id="bday">
+				</select>月
+				<select name="bday" id="bday">
 					<option value=""></option>
 					<? for ($i=1; $i<=31; $i++) {?>
 					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>日	
+				</select>日	
 				<font color="#FF0000">*</font>						
-                    </td>	  
-            </tr>
-            <tr>
-                <td align="center">性別</td>
-				<td>
-					<select name="sex" id="sex">
+			</td>	  
+		</tr>
+		<tr>
+			<td align="center">性別</td>
+			<td>
+				<select name="sex" id="sex">
 					<option value="" >請選擇性別</option>
 					<?foreach($admin_sex as $key => $value){?>
 					<option value="<?=$key?>"><?= $value; ?></option>
 					<?}?>
-					</select>					
+				</select>					
 				<font color="#FF0000">*</font>					
-				</td>
-            </tr>
-            <tr>
-                <td align="center">血型</td>
-				<td>
-					<select name="blood" id="blood">
+			</td>
+		</tr>
+		<tr>
+			<td align="center">血型</td>
+			<td>
+				<select name="blood" id="blood">
 					<option value="" >請選擇血型</option>
 					<?foreach($admin_blood as $key => $value){?>
 					<option value="<?=$key?>"><?= $value; ?></option>
 					<?}?>
-					</select>					
+				</select>					
 				<font color="#FF0000">*</font>					
-				</td>
-            </tr>
-            <tr>
-                <td align="center">婚姻</td>
-				<td>
-					<select name="marry" id="marry">
+			</td>
+		</tr>
+		<tr>
+			<td align="center">婚姻</td>
+			<td>
+				<select name="marry" id="marry">
 					<option value="" >請選擇婚姻</option>
 					<?foreach($admin_marry as $key => $value){?>
 					<option value="<?=$key?>"><?= $value; ?></option>
 					<?}?>
-					</select>
+				</select>
 				<font color="#FF0000">*</font>					
-				</td>
-            </tr>
-            <tr>
-                <td align="center">備註</td>
-				<td><input type="text" name="remark" id="remark" style="width:200px;" /></td>
-            </tr>
-            <tr>
-                <td colspan="10" align="center">
-                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
-                 </td>
-            </tr>
-        </table>
-    </form>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">備註</td>
+			<td><input type="text" name="remark" id="remark" style="width:200px;" /></td>
+		</tr>
+		<tr>
+			<td colspan="10" align="center">
+			<div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
+			</td>
+		</tr>
+	</table>
+</form>
 <? if($error=='ok'){?>
 <script>
 alert('新增成功');
@@ -269,13 +256,3 @@ history.go(-1)
 
 </body>
 </html>
-            <script type="text/javascript">
-                $(".date_pick").datepick({
-                    dateFormat: 'yy-mm-dd',
-                    numberOfMonths: 1,
-                    showCurrentAtPos: 0,
-                    showOn: 'both',
-                    buttonImageOnly: true,
-                    buttonImage: 'include/datepick/calendar.gif'
-                });
-            </script>

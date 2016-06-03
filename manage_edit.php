@@ -12,7 +12,6 @@ $da=$db->fetch_array($query);
 if(empty($da['uid'])){header("Location:index.php"); exit();} 
 $error='';
 $key=ck_num($key);
-
 if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$_POST=m_esc(ck_gp($_POST));
 	$uid=$_POST['uid'];
@@ -56,12 +55,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(is_null($marry)){$error.='請輸入婚姻!\r\n';}
 	if(empty($error)){ 
 	 $db->query("UPDATE admin_info SET group_uid='$group_uid',user_name='$user_name',pass_word='$pass_word',name='$name',birthday='$birthday',sex='$sex',blood='$blood',marry='$marry',remark='$remark',start_date='$start_date',close_date='$close_date',user_level='$user_level',settime='$settime',del='$del',is_lock='$is_lock',phone='$phone',cellphone='$cellphone' WHERE uid='$_POST[uid]'");
-
  			$id=$db->insert_id();
 			$descrip="add admin_system_add.php uid=$uid name=$name";
 			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
  			$error='ok';	
- 
 	 	}	
 	}	
 $admin_del=array('N' => '否', 'Y' => '是');
@@ -70,10 +67,7 @@ $admin_sex=array(0=>'女',1=>'男');
 $admin_blood=array(0=>'A',1=>'B',2=>'AB',3=>'O');
 $admin_marry=array(0=>'未婚',1=>'已婚');
 $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
-
 $ad_g=$admin_group[$da['group_uid']];
-
-
 /*生日*/
 $sql = "SELECT * FROM admin_info where uid=$uid";
 $rs = $db->query($sql);
@@ -98,7 +92,6 @@ $cmonth = (int)substr($r['close_date'], 5, 2);
 $cm=str_pad($cmonth, 2, '0', STR_PAD_LEFT);
 $cday = (int)substr($r['close_date'], 8, 2);
 $cd=str_pad($cday, 2, '0', STR_PAD_LEFT);
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -174,202 +167,195 @@ function check_empty() {
 		setTimeout("change_btn('c')", 500);
 	}
 }      
-	</script> 
-	
+</script> 
 </head>
-    <body>
-
-    <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
-        <table cellpadding="0" cellspacing="0" class="menutable">
-            <tr>
-                <td class="tableTitle" colspan="10">修改人員</td>
-            </tr>
-
-            <tr>
-                <td align="center">群組</td>
-				<td>
-					<select name="group_uid" id="group_uid">
+<body>
+<form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
+	<table cellpadding="0" cellspacing="0" class="menutable">
+		<tr>
+			<td class="tableTitle" colspan="10">修改人員</td>
+		</tr>
+		<tr>
+			<td align="center">群組</td>
+			<td>
+				<select name="group_uid" id="group_uid">
 					<option value="<?= $da['group_uid']; ?>" ><?= $admin_group[$da['group_uid']]; ?></option>
 					<?foreach($admin_group as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
-					</select>
-                </td>
-			</tr>
-            <tr>
-				<td align="center">帳號</td>
-                <td><?=$da['user_name']?></td>
-				<input type="hidden" name="uid" value="<?=$da['uid']?>">	
-				<input type="hidden" name="user_name" value="<?=$da['user_name']?>">			
-            </tr>
-            <tr>
-                <td align="center">密碼</td>
-                <td><input type="password"  name="pass_word" id="pass_word"  style="width:200px;" /></td>
-			</tr>
-			<tr>					 
-				<td width="150" align="center">再重複一次密碼</td>
-				<td><input type="password" name="pass_word2" id="pass_word2" style="width:200px;"></td>
-			</tr>					
-            <tr>				
-				<td align="center">姓名</td>
-                    <td><input type="text" value="<?=$da['name']?>" name="name" id="name" style="width:60px" /></td>
-			</tr>
-            <tr>
-                <td align="center">生日</td>
-                    <td>
-					<select name="byear" id="byear">
- 					<option value="<?= $by; ?>" ><?= $by; ?></option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">帳號</td>
+			<td><?=$da['user_name']?></td>
+			<input type="hidden" name="uid" value="<?=$da['uid']?>">	
+			<input type="hidden" name="user_name" value="<?=$da['user_name']?>">			
+		</tr>
+		<tr>
+			<td align="center">密碼</td>
+			<td><input type="password"  name="pass_word" id="pass_word"  style="width:200px;" /></td>
+		</tr>
+		<tr>					 
+			<td width="150" align="center">再重複一次密碼</td>
+			<td><input type="password" name="pass_word2" id="pass_word2" style="width:200px;"></td>
+		</tr>					
+		<tr>				
+			<td align="center">姓名</td>
+			<td><input type="text" value="<?=$da['name']?>" name="name" id="name" style="width:60px" /></td>
+		</tr>
+		<tr>
+			<td align="center">生日</td>
+			<td>
+				<select name="byear" id="byear">
+					<option value="<?= $by; ?>" ><?= $by; ?></option>
 					<? for ($i=1960; $i<=2016; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 4, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select> 年
-
-                     <select name="bmonth" id="bmonth">
- 					<option value="<?= $bm; ?>" ><?= $bm; ?></option>
+				</select> 年
+				 <select name="bmonth" id="bmonth">
+					<option value="<?= $bm; ?>" ><?= $bm; ?></option>
 					<? for ($i=1; $i<=12; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>月
-                    <select name="bday" id="bday">
- 					<option value="<?= $bd; ?>" ><?= $bd; ?></option>
+				</select>月
+				<select name="bday" id="bday">
+					<option value="<?= $bd; ?>" ><?= $bd; ?></option>
 					<? for ($i=1; $i<=31; $i++) {?>
 					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>日	
-                    </td>	  
-            </tr>
-                <td width="150" align="center">分機</td> 
-				 <td><input type="text" name="phone"  value="<?=$da['phone']?>"></td>
-				 </tr>
-				<tr>				 
-                <td width="150" align="center">手機</td> 
-				 <td><input type="text" name="cellphone"  value="<?=$da['cellphone']?>"></td>	
-				 </tr>
-				<tr>			
-            <tr>
-                <td align="center">性別</td>
-				<td>
-					<select name="sex" id="sex">
+				</select>日	
+			</td>	  
+		</tr>
+			<td width="150" align="center">分機</td> 
+			<td><input type="text" name="phone"  value="<?=$da['phone']?>"></td>
+		</tr>
+		<tr>				 
+			<td width="150" align="center">手機</td> 
+			<td><input type="text" name="cellphone"  value="<?=$da['cellphone']?>"></td>	
+		</tr>
+		<tr>			
+		<tr>
+			<td align="center">性別</td>
+			<td>
+				<select name="sex" id="sex">
 					<option value="<?= $da['sex']; ?>" ><?= $admin_sex[$da['sex']]; ?></option>
 					<?foreach($admin_sex as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?echo $key ;}?>
-					</select>						
-				</td>
-            </tr>
-            <tr>
-                <td align="center">血型</td>
-				<td>
-					<select name="blood" id="blood">
+				</select>						
+			</td>
+		</tr>
+		<tr>
+			<td align="center">血型</td>
+			<td>
+				<select name="blood" id="blood">
 					<option value="<?= $da['blood']; ?>" ><?= $admin_blood[$da['blood']]; ?></option>
 					<?foreach($admin_blood as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
-					</select>					
-				</td>
-            </tr>
-            <tr>
-                <td align="center">婚姻</td>
-					 <td>					 
-					<select name="marry" id="marry">
+				</select>					
+			</td>
+		</tr>
+		<tr>
+			<td align="center">婚姻</td>
+			 <td>					 
+				<select name="marry" id="marry">
 					<option value="<?= $da['marry']; ?>" ><?= $admin_marry[$da['marry']]; ?></option>
 					<?foreach($admin_marry as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
-					</select>	
-				</td>				
-            </tr>
-			<tr>				
-				<td align="center">層級</td>
-                    <td><input type="text" value="<?=$da['user_level']?>" name="user_level" id="user_level" style="width:60px" /></td>
-			</tr>				
-			<tr>				
-				<td align="center">刪除</td>
-				<td>					 
-					<select name="del" id="del">
+				</select>	
+			</td>				
+		</tr>
+		<tr>				
+			<td align="center">層級</td>
+			<td><input type="text" value="<?=$da['user_level']?>" name="user_level" id="user_level" style="width:60px" /></td>
+		</tr>				
+		<tr>				
+			<td align="center">刪除</td>
+			<td>					 
+				<select name="del" id="del">
 					<option value="<?= $da['del']; ?>" ><?= $admin_del[$da['del']]; ?></option>
 					<?foreach($admin_del as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
-					</select>	
-				</td>
-			</tr>			
-			<tr>				
-				<td align="center">鎖定</td>
-					 <td>					 
-					<select name="is_lock" id="is_lock">
+				</select>	
+			</td>
+		</tr>			
+		<tr>				
+			<td align="center">鎖定</td>
+				 <td>					 
+				<select name="is_lock" id="is_lock">
 					<option value="<?= $da['is_lock']; ?>" ><?= $admin_is_lock[$da['is_lock']]; ?></option>
 					<?foreach($admin_is_lock as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
-					</select>	
-				</td>
-			</tr>
-            <tr>
-                <td align="center">備註</td>
-				<td>
+				</select>	
+			</td>
+		</tr>
+		<tr>
+			<td align="center">備註</td>
+			<td>
 				<textarea  name="remark" id="remark" style="width:200px;" value="<?=$da['remark']?>"><?=$da['remark']?> </textarea>
-				</td>
-            </tr>
-            <td align="center">開始時間</td>
-                    <td>
-					<select name="syear" id="syear">
- 					<option value="<?= $sy; ?>" ><?= $sy; ?></option>
+			</td>
+		</tr>
+			<td align="center">開始時間</td>
+			<td>
+				<select name="syear" id="syear">
+					<option value="<?= $sy; ?>" ><?= $sy; ?></option>
 					<? for ($i=1960; $i<=2016; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 4, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select> 年
-
-                     <select name="smonth" id="smonth">
- 					<option value="<?= $sm; ?>" ><?= $sm; ?></option>
+				</select> 年
+				 <select name="smonth" id="smonth">
+					<option value="<?= $sm; ?>" ><?= $sm; ?></option>
 					<? for ($i=1; $i<=12; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>月
-                    <select name="sday" id="sday">
- 					<option value="<?= $sd; ?>" ><?= $sd; ?></option>
+				</select>月
+				<select name="sday" id="sday">
+					<option value="<?= $sd; ?>" ><?= $sd; ?></option>
 					<? for ($i=1; $i<=31; $i++) {?>
 					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
-					</select>日	
-                    </td>	  
-            </tr>			
-                <td align="center">結束時間</td>
-<!-- 				<td><input type="text" name="birthday" id="birthday" class="date_pick" style="width:200px;" /></td> -->
-                    <td>
+				</select>日	
+			</td>	  
+		</tr>			
+			<td align="center">結束時間</td>
+				<td>
 					<select name="cyear" id="cyear">
- 					<option value="<?= $cy; ?>" ><?= $cy; ?></option>
-					<? for ($i=1960; $i<=2016; $i++) {?>
-					<option value="<?=$i?>" ><?= str_pad($i, 4, '0', STR_PAD_LEFT); ?></option>
-					<? } ?>
+						<option value="<?= $cy; ?>" ><?= $cy; ?></option>
+						<? for ($i=1960; $i<=2016; $i++) {?>
+						<option value="<?=$i?>" ><?= str_pad($i, 4, '0', STR_PAD_LEFT); ?></option>
+						<? } ?>
 					</select> 年
-
-                     <select name="cmonth" id="cmonth">
- 					<option value="<?= $cm; ?>" ><?= $cm; ?></option>
-					<? for ($i=1; $i<=12; $i++) {?>
-					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
-					<? } ?>
+					 <select name="cmonth" id="cmonth">
+						<option value="<?= $cm; ?>" ><?= $cm; ?></option>
+						<? for ($i=1; $i<=12; $i++) {?>
+						<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
+						<? } ?>
 					</select>月
-                    <select name="cday" id="cday">
- 					<option value="<?= $cd; ?>" ><?= $cd; ?></option>
-					<? for ($i=1; $i<=31; $i++) {?>
-					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
-					<? } ?>
+					<select name="cday" id="cday">
+						<option value="<?= $cd; ?>" ><?= $cd; ?></option>
+						<? for ($i=1; $i<=31; $i++) {?>
+						<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
+						<? } ?>
 					</select>日	
-                    </td>	  
-            </tr>			
-			<tr>				
-				<td align="center">建立時間</td>
-                <td><?=$da['settime']?></td>
-				<input type="hidden" name="settime" value="<?=$da['settime']?>">					
-			</tr>				
-            <tr>
-                <td colspan="10" align="center">
-                <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
-                 </td>
-            </tr>
-        </table>
-    </form>
+				</td>	  
+		</tr>			
+		<tr>				
+			<td align="center">建立時間</td>
+			<td><?=$da['settime']?></td>
+			<input type="hidden" name="settime" value="<?=$da['settime']?>">					
+		</tr>				
+		<tr>
+			<td colspan="10" align="center">
+				<div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
+			</td>
+		</tr>
+	</table>
+</form>
 <? if($error=='ok'){?>
 <script>
 alert('更新成功');

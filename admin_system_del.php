@@ -15,7 +15,6 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 		$error='ok';
 		$descrip="del admin_system_del.php id=$da[id] name=$da[name]";
 		$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('36','$id','$admin_d[uid]','3','$timeformat','$timestamp','$descrip')");
-		
 }
 $f_del=array(0=>'否', 1=>'是');
 $querye = $db->query("select id,up_id,name from b_s_group");
@@ -45,7 +44,6 @@ function change_btn(st) {
 </script>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <? include('include/css_js.php');?>
@@ -58,8 +56,7 @@ function change_btn(st) {
                 }
             </style>
     </head>
-
-    <body>
+<body>
     <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
         <table cellpadding="0" cellspacing="0" class="menutable">
             <tr>
@@ -72,34 +69,33 @@ function change_btn(st) {
             <tr>
                 <td align="center">上層ID</td>
                 <td><?=$da['up_id']?>：<? if($da['up_id']=='0') { echo '為主要階層';}else{ echo"$id_in";}?></td>
-                <tr>
+			<tr>
                 <td align="center">系統名稱</td>
                 <td><?=$da['name']?></td>
-                </tr>
-                <tr>
+			</tr>
+			<tr>
                 <td align="center">排序</td>
                 <td><?=$da['sortn']?></td>
-				</tr>
+			</tr>
                 <td align="center">刪除</td>
                 <td><?=' '.$f_del[$da['del']]?></td>
-				</tr>	
-                <tr>
+			</tr>	
+			<tr>
                 <td align="center">程式名稱</td>
                 <td><?=$da['programs_p']?></td>
-                </tr>
-                <tr>
-                    <td colspan="10" align="center">
-                                <div id="subm_1" style="height:20px; text-align:center"><input type="submit" value="刪　　　　除" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
-                            </td>
-                        </tr>
+			</tr>
+			<tr>
+				<td colspan="10" align="center">
+					<div id="subm_1" style="height:20px; text-align:center"><input type="submit" value="刪　　　　除" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
+				</td>
+			</tr>
             </table>
-        </form>
-        <? if($error=='ok'){?>
-            <script>
-                alert('刪除成功');
-                parent.referu('');
-            </script>
-            <? }?>
-    </body>
-
-    </html>
+	</form>
+<? if($error=='ok'){?>
+<script>
+	alert('刪除成功');
+	parent.referu('');
+</script>
+<? }?>
+</body>
+</html>

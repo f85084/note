@@ -28,9 +28,6 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	 	}	
 	}	
 ?>
-
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -44,7 +41,6 @@ function change_btn(st) {
 		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
 	}
 }
-
 function strim(str){
      return str.replace(/(^\s*)|(\s*$)/g, "");
 }
@@ -82,19 +78,14 @@ function strim(str){
 		setTimeout("change_btn('c')", 500);
 	}
 }
-
-
 </script>
-
 </head>
-
 <body>
     <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
         <table cellpadding="0" cellspacing="0" class="menutable">
             <tr>
                 <td class="tableTitle" colspan="10">後台子系統</td>
             </tr>
-
             <tr>
                 <td align="center">上層ID</td>
 				<td>
@@ -107,27 +98,27 @@ function strim(str){
 					</select>
                 </td>
 			</tr>
-                <tr>
+			<tr>
                 <td align="center">系統名稱</td>
                 <td><input type="text" name="name" id="name" style="width:300px;" /></td>
-                </tr>
-                <tr>
-                    <td align="center">排序</td>
-                    <td><input type="text" value="0" name="sortn" id="sortn"  style="width:60px" /></td>
-					</tr>
-                <tr>
-                    <td align="center">刪除</td>
-                    <td><input type="radio" value="0" name="del" checked="checked" /> 否&nbsp;&nbsp;<input type="radio" value="1" name="del" />是</td>
-					</tr>
-                <tr>
-                    <td align="center">程式名稱</td>
+			</tr>
+			<tr>
+				<td align="center">排序</td>
+				<td><input type="text" value="0" name="sortn" id="sortn"  style="width:60px" /></td>
+			</tr>
+			<tr>
+				<td align="center">刪除</td>
+				<td><input type="radio" value="0" name="del" checked="checked" /> 否&nbsp;&nbsp;<input type="radio" value="1" name="del" />是</td>
+			</tr>
+			<tr>
+                <td align="center">程式名稱</td>
                 <td><input type="text" name="programs_p" id="programs_p" style="width:300px;" /></td>
-                </tr>
-                <tr>
-                    <td colspan="10" align="center">
-                        <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
-                    </td>
-                </tr>
+			</tr>
+			<tr>
+				<td colspan="10" align="center">
+					<div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
+				</td>
+			</tr>
         </table>
     </form>
 <? if($error=='ok'){?>

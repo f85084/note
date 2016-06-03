@@ -32,15 +32,12 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
  		$error='ok';	
 	 	}	
 	}	
-	/* $querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group  where id='$sld' || up_id='$sld'  order by sortn,id"); */
-     $querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group   order by sortn,id");
-	 $temp=array();
-	 $temps=array();
-
+$querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group   order by sortn,id");
+$temp=array();
+$temps=array();
 $thors=explode(',',$da['thor']);  
 $admin_group=array(0=>'管理者',1=>'開發人員',2=>'編輯人員',3=>'網頁設計師')	;
 $ad_g=$admin_group[$da['group_uid']];
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -53,8 +50,7 @@ function strim(str){
 		}
 function check_empty() {
 	ierror = 0;
-	message = '';			
-														
+	message = '';															
 			if(ierror ==1){ 
 				alert(message);
 			}else{
@@ -75,10 +71,10 @@ function check_empty() {
                 <td align="center">群組</td>
 				<td>
 					<select name="group_uid" id="group_uid">
-					<option value="<?= $da['group_uid']; ?>" ><?= $admin_group[$da['group_uid']]; ?></option>
-					<?foreach($admin_group as $key => $value){?>
-					<option value="<?= $key?>"><?= $value; ?></option>					
-					<?}?>
+						<option value="<?= $da['group_uid']; ?>" ><?= $admin_group[$da['group_uid']]; ?></option>
+						<?foreach($admin_group as $key => $value){?>
+						<option value="<?= $key?>"><?= $value; ?></option>					
+						<?}?>
 					</select>
                 </td>
 			</tr>
@@ -92,16 +88,14 @@ function check_empty() {
             <? while($ld = $db->fetch_array($querya)){?>
 	        <?if($ld['up_id']==0){
 			$temp[]=$ld;
-		}else{
+			}else{
 			$temps[$ld['up_id']][]=$ld;
-		}
-	 }?>
-				<?
-//print_r($temp); print_r($temps);
-foreach($temp as $v){?>
+					}
+						}?>
+		<?foreach($temp as $v){?>
 		<td align="center" bgcolor="#FFF2FF"><?=$v['id']?></td>	
 		<td align="center" bgcolor="#FFF2FF"><?=$v['name']?></td>
-			   <td bgcolor="#FFF2FF">
+				<td bgcolor="#FFF2FF">
 			 <? $pid=$v['id']; 
 					if(in_array($pid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$pid?>"<?=in_array($pid,$thors)? ' checked="checked"': '';?> >
 					<?='預覽'?>&nbsp;&nbsp;		
@@ -122,8 +116,8 @@ foreach($temp as $v){?>
 					if(in_array($allpid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$allpid?>"<?=in_array($allpid,$thors)? ' checked="checked"': '';?>  >
 					<?='全部'?>&nbsp;&nbsp;		
 						<? }?>	
-			</td> 
-                </tr>
+				</td> 
+            </tr>
 	<?foreach($temps[$v['id']] as $s){?>
 		<td align="center"><?=$s['id']?></td>	
 		<td align="center"><?=$s['name']?></td>
@@ -150,7 +144,8 @@ foreach($temp as $v){?>
 						<? }?>	
 			</td> 
                 </tr>
-	<? }}?>
+	<? }
+			}?>
 		    <tr>
                 <td colspan="10" align="center">
                 <div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this.form)" /><input type="hidden" name="act" value="add" /></div>
@@ -170,5 +165,4 @@ history.go(-1)
 </script>
 <? }?>
 </body>
-
 </html>
