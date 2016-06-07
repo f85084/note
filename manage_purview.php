@@ -32,7 +32,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
  		$error='ok';	
 	 	}	
 	}	
-$querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group   order by sortn,id");
+$querya = $db->query("SELECT id,name,up_id,sortn FROM b_s_group  where del='0'  order by sortn,id");
 $temp=array();
 $temps=array();
 $thors=explode(',',$da['thor']);  
@@ -133,6 +133,10 @@ function check_empty() {
 			 <? $epid='e'.$s['id']; 
 					if(in_array($epid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$epid?>"<?=in_array($epid,$thors)? ' checked="checked"': '';?>  >
 					<?='編輯'?>&nbsp;&nbsp;		
+						<? }?>		
+			 <? $dpid='d'.$s['id']; 
+					if(in_array($dpid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$dpid?>"<?=in_array($dpid,$thors)? ' checked="checked"': '';?>  >
+					<?='刪除'?>&nbsp;&nbsp;		
 						<? }?>		
 			 <? $ppid='p'.$s['id']; 
 					if(in_array($ppid,$allthors)){?><input type="checkbox" name="pid[]" id="pid[]" value="<?=$ppid?>"<?=in_array($ppid,$thors)? ' checked="checked"': '';?>  >
