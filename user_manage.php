@@ -8,8 +8,43 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
-$query=$db->query("SELECT * FROM admin_info");
-$da=$db->fetch_array($query);
+/*選擇日期*/
+if(!empty($_GET['d1']) && !empty($_GET['d2'])){
+	$wherea[]="ctime >= '".m_esc($_GET['d1'])." 00:00:00'";
+	$wherea[]="ctime <= '".m_esc($_GET['d2'])." 23:59:59'";
+	$lurl.="&d1=".$_GET['d1']."&d2=".$_GET['d2'];
+	$logw[]="ctime >= ".m_esc($_GET['d1'])." and ctime <=".m_esc($_GET['d2']);
+}elseif(!empty($_GET['d1'])){
+	$wherea[]="ctime >='".m_esc($_GET['d1'])." 00:00:00'";
+	//$_GET['d2']=gmdate('Y-m-d',strtotime($_GET['d1'])+7*86400+8*3600);
+	//$wherea[]="ctime <= '".m_esc($_GET['d2'])." 23:59:59'";
+	$lurl.="&d1=".$_GET['d1'];
+	$logw[]="ctime >= ".m_esc($_GET['d1']);
+}elseif(!empty($_GET['d2'])){
+	$wherea[]="ctime <= '".m_esc($_GET['d2'])." 23:59:59'";
+	//$_GET['d1']=gmdate('Y-m-d',strtotime($_GET['d2'])-7*86400+8*3600);
+	//$wherea[]="ctime >='".m_esc($_GET['d1'])." 00:00:00'";
+	$lurl.="&d2=".$_GET['d2'];
+	$logw[]="and ctime <=".m_esc($_GET['d2']);
+}
+if(!empty($_GET['d3']) && !empty($_GET['d4'])){
+	$wherea[]="etime >= '".m_esc($_GET['d3'])." 00:00:00'";
+	$wherea[]="etime <= '".m_esc($_GET['d4'])." 23:59:59'";
+	$lurl.="&d3=".$_GET['d3']."&d4=".$_GET['d4'];
+	$logw[]="etime >= ".m_esc($_GET['d3'])." and etime <=".m_esc($_GET['d4']);
+}elseif(!empty($_GET['d3'])){
+	$wherea[]="etime >='".m_esc($_GET['d3'])." 00:00:00'";
+	//$_GET['d2']=gmdate('Y-m-d',strtotime($_GET['d1'])+7*86400+8*3600);
+	//$wherea[]="ctime <= '".m_esc($_GET['d2'])." 23:59:59'";
+	$lurl.="&d3=".$_GET['d3'];
+	$logw[]="etime >= ".m_esc($_GET['d3']);
+}elseif(!empty($_GET['d4'])){
+	$wherea[]="etime <= '".m_esc($_GET['d4'])." 23:59:59'";
+	//$_GET['d1']=gmdate('Y-m-d',strtotime($_GET['d2'])-7*86400+8*3600);
+	//$wherea[]="ctime >='".m_esc($_GET['d1'])." 00:00:00'";
+	$lurl.="&d4=".$_GET['d4'];
+	$logw[]="and etime <=".m_esc($_GET['d4']);
+}
 if(!empty($_GET['keyid'])){
 	$wherea[]="account like '%".m_esc($_GET['keyid'])."%'";
 	$logw[]="account like ".m_esc($_GET['keyid']);
@@ -37,6 +72,11 @@ if (ck_num($_GET['mi'])){
 	$lurl.="&mi=".$_GET['mi'];
 	$logw[]="ulevel = ".m_esc($_GET['mi']);
 }
+if ($_GET['mw']){
+	$wherea[]="fm='".m_esc($_GET['mw'])."'";
+	$lurl.="&mw=".$_GET['mw'];
+	$logw[]="fm = ".m_esc($_GET['mw']);
+}
 if(!empty($wherea)){
 	$where=" WHERE ".implode(' and ',$wherea);
 	$logws=implode(' and ',$logw);
@@ -46,19 +86,25 @@ IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
 $querya=$db->query("SELECT id,account,mobile_country_code,mobile,name,nickname,sex,birthday,email,zip,address,status,ulevel,ctime,etime,cip,fm,fmid,intro FROM user  $where  order by  id  DESC"." LIMIT $TP, $rownum");
 /*寫入log*/
-/* $descrip="view manage.php ".$logws;
+$descrip="view user_manage.php ".$logws;
 $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
- *//*下一頁*/
+/*下一頁*/
 $query_num = $db->query("SELECT COUNT(*) FROM user ".$where);
 			$q_num = $db->fetch_row($query_num);
 			$product_page_num = $q_num[0];		
 			$page_change 	  = ceil($product_page_num/$rownum);
 			$_GET=gt($_GET);	
 			$myURL 			  = "index.php?pid=".$_GET['pid'].$lurl."&ToPage=";
-$user_sex=array(0=>'女生',1=>'男生');
+$user_sex=array(0=>'女',1=>'男');
 $user_status=array(0=>'關閉',1=>'開啟');
 $user_ulevel=array(0=>'未認證',1=>'已認證');
+$querywe = $db->query("select distinct  fm from user");
 ?>
+<style type="text/css">
+	@import "include/datepick/jquery.datepick.css";
+</style>
+<script type="text/javascript" src="include/datepick/jquery.datepick.js"></script>
+<script type="text/javascript" src="include/datepick/jquery.datepick-zh-TW.js"></script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -101,9 +147,23 @@ $user_ulevel=array(0=>'未認證',1=>'已認證');
 									<? ++$x;}?>
 					</td> 
 				</tr>					
-                <tr>
+				<tr>
+				    <td align="center">何處註冊</td>
+					<td>					
+						<select name="mw" id="mw">
+							<option value="" >請選擇</option>
+							<?while($wl = $db->fetch_array($querywe)){?>	
+							<option value="<?=$wl['fm']?>" <?if ($_GET['mw'] == $wl["fm"]) { echo 'selected="selected"'; } ?> ><?=$wl['fm']?></option>					
+							<?}?>
+						</select>
+					</td>						
+						<td width="150" align="center">建立時間</td>
+					<td >從 <input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d2" id="d2" class="date_pick" value="<?=$_GET['d2']?>" style="width:70px;" maxlength="10" /></td>					
+					<td width="150" align="center">修改時間</td>
+					<td >從 <input type="text" name="d3" id="d3" class="date_pick" value="<?=$_GET['d3']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d4" id="d4" class="date_pick" value="<?=$_GET['d4']?>" style="width:70px;" maxlength="10" /></td>					
+				<tr>
 					<td >
-					     <? if(in_array('a41',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:user_manage_add.php','580px','730px','iframe');" />
+					     <? if(in_array('a41',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:user_manage_add.php','580px','660px','iframe');" />
                           <? }?>
                     </td>
                     <td colspan="9"><input type="submit" value="送出" /><input type="hidden" name="pid" value="<?=ht($_GET['pid'])?>" /></td>					
@@ -135,10 +195,10 @@ $user_ulevel=array(0=>'未認證',1=>'已認證');
 			</tr>
 			<? }?>
 			<tr>
-				<td width="5%" align="center">ID</td>		
+				<td width="3%" align="center">ID</td>		
 				<td width="10%" align="center">帳號</td>						
-				<td width="5%" align="center">姓名</td>
-				<td width="5%" align="center">性別</td>
+				<td width="9%" align="center">姓名</td>
+				<td width="3%" align="center">性別</td>
 				<td width="15%" align="center">電子信箱</td>
 				<td width="10%" align="center">從何處註冊</td>
 				<td width="5%" align="center">狀態</td>
@@ -185,9 +245,9 @@ $user_ulevel=array(0=>'未認證',1=>'已認證');
 					<?=ht($al['etime']) ?>
 				</td> 				
 				<td align="center">
-				<? if(in_array('e38',$p_array)){?><input type="button" onclick="dialog('修改','iframe:manage_edit.php?uid=<?=ht($al['uid'])?>','800px','600','iframe');" value="修改" />
+				<? if(in_array('e41',$p_array)){?><input type="button" onclick="dialog('修改','iframe:user_manage_edit.php?id=<?=ht($al['id'])?>','580px','770','iframe');" value="修改" />
 					 <? }?>
-				<? if(in_array('d38',$p_array)){?><input type="button" onclick="dialog('刪除','iframe:manage_del.php?uid=<?=ht($al['uid'])?>','800px','600','iframe');" value="刪除" />
+				<? if(in_array('d41',$p_array)){?><input type="button" onclick="dialog('刪除','iframe:user_manage_del.php?id=<?=ht($al['id'])?>','580px','670','iframe');" value="刪除" />
 					  <? }?>
 				</td>										
 			</tr>
@@ -215,5 +275,15 @@ $user_ulevel=array(0=>'未認證',1=>'已認證');
 			<? }?>
 	</table>           
 </div> 
+<script type="text/javascript">
+	$(".date_pick").datepick({
+		dateFormat: 'yy-mm-dd',
+		numberOfMonths: 1,
+		showCurrentAtPos: 0,
+		showOn: 'both',
+		buttonImageOnly: true,
+		buttonImage: 'include/datepick/calendar.gif'
+	});
+</script>
 </body>
 </html>

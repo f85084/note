@@ -90,9 +90,12 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
 						<select name="mg" id="mg">
 							<option value="" >請選擇群組</option>
 							<?foreach($admin_group as $key => $value){?>
-							<option value="<?=$key?>"><?= $value; ?></option>					
+						<option value="<?=$key?>" <?=($key==$_GET['mg'] && ck_num($_GET['mg']))? ' selected="selected"': '';?> ><?= $value; ?></option>
+				
+				
 							<?}?>
-						</select>		
+						</select>	
+					</td>						
                     <td width="150" align="center">鎖定</td>
                     <td colspan="5"><input type="radio" name="ml" id="ml" value="" <?=empty($_GET['ml'])? ' checked="checked"': '';?> />不拘
                         <? $x=1;foreach($admin_is_lock as $k => $v){?><input type="radio" name="ml" id="ml"  value="<?=$k?>" <?=($k==$_GET['ml'] && ck_num($_GET['ml']))? ' checked="checked"': '';?> />

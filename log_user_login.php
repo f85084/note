@@ -3,7 +3,9 @@ $_SESSION['r_url']=$_SERVER['QUERY_STRING'];
 $thorid=39;
 if(!in_array($thorid,$p_array)){header("Location:login.php"); exit();}
 $wherea=array();
+$whereai=array();
 $where='';
+$wherei='';
 $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
@@ -43,23 +45,22 @@ if(!empty($_GET['d1']) && !empty($_GET['d2'])){
 	//$logw[]="times >= ".m_esc($_GET['d1'])."and times <=".m_esc($_GET['d2']);
 }
 /*搜尋*/
-if(ck_num($_GET['keyi'])){
-	$keyw=m_esc($_GET['keyi']);
-	$wherea[]="uid like '%".m_esc($_GET['keyi'])."%'";
-	$lurl.="&keyi=".rawurlencode(ds($_GET['keyi']));
-	$logw[]="keyi = ".$keyi;
+if($_GET['key_id']){
+	$key_id=m_esc($_GET['key_id']);
+	$wherea[]="B.account like '%".m_esc($_GET['key_id'])."%'";
+	$lurl.="&key_id=".rawurlencode(ds($_GET['key_id']));
+	$logw[]="account like".$key_id;
 }
-if(!empty($_GET['keyn'])){
-	$keyn=m_esc($_GET['keyn']);
-	$wherea[]="name like '%".m_esc($_GET['keyn'])."%'";
-	$lurl.="&keyn=".rawurlencode(ds($_GET['keyn']));
-	$logw[]="keyn = ".$keyn;
+if(!empty($_GET['key_name'])){
+	$key_name=m_esc($_GET['key_name']);
+	$wherea[]="A.name like '%".m_esc($_GET['key_name'])."%'";
+	$lurl.="&key_name=".rawurlencode(ds($_GET['key_name']));
+	$logw[]="name like".$key_name;
 }
-if(!empty($_GET['keya'])){
-	$keyn=m_esc($_GET['keya']);
-	$wherea[]="fm like '%".m_esc($_GET['keya'])."%'";
-	$lurl.="&keya=".rawurlencode(ds($_GET['keya']));
-	$logw[]="keya = ".$keya;
+if ($_GET['fm']){
+	$wherea[]="A.fm='".m_esc($_GET['fm'])."'";
+	$lurl.="&fm=".$_GET['fm'];
+	$logw[]="select_from = ".m_esc($_GET['fm']);
 }
 /*單選*/
 if (ck_num($_GET['int'])){
@@ -67,44 +68,34 @@ if (ck_num($_GET['int'])){
 	$lurl.="&int=".$_GET['int'];
 	$logw[]="in_t = ".m_esc($_GET['int']);
 }
-if(!empty($_GET['mi'])){
-	$wherea[]="uid='".m_esc($_GET['mi'])."'";
-	$lurl.="&mi=".$_GET['mi'];
-	$logw[]="uid = ".m_esc($_GET['mi']);
-}
 /*帶入尋找*/
 if(!empty($wherea)){
 	$where=" WHERE ".implode(' and ',$wherea);
 	$logws=implode(' and ',$logw);
 }
 /*寫入log*/
-/* $descrip="view user_login.php ".$logws;
+$descrip="view log_user_login.php ".$logws;
 $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
- */$rownum = 20; 
+$rownum = 20; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
-$querya=$db->query("SELECT id,uid,name,ip,time,times,in_t,fm FROM  user_login_log  $where  order by times desc"." LIMIT $TP, $rownum");
-
+/* $querya=$db->query("SELECT * FROM user_login_log   $where  order by times desc"." LIMIT $TP, $rownum"); */
+$querya=$db->query("SELECT A.id,A.uid,A.name,A.ip,A.day,A.time,A.times,A.in_t,A.fm,B.account FROM user_login_log as A LEFT join user as B on A.uid = B.id   $where  order by times desc"." LIMIT $TP, $rownum");
 /*下一頁*/
-$query_num = $db->query("SELECT COUNT(*) FROM user_login_log ".$where);
+$query_num = $db->query("SELECT COUNT(*) FROM user_login_log as A LEFT join user as B on A.uid = B.id ".$where);
 			$q_num = $db->fetch_row($query_num);
 			$product_page_num = $q_num[0];		
 			$page_change 	  = ceil($product_page_num/$rownum);
 			$_GET=gt($_GET);	
 			$myURL 			  = "index.php?pid=".$_GET['pid'].$lurl."&ToPage=";
-
 /*編輯者*/
 $querye = $db->query("SELECT id,account from user");
 $eAdmin=array();
 while($e = $db->fetch_array($querye)){
 	$eAdmin[$e['id']]=$e['account'];
 }
-$queryer = $db->query("SELECT id,account from user");
-$erAdmin=array();
-while($er = $db->fetch_array($queryer)){
-	$erAdmin[$e['account']]=$e['id'];
-}
 $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
+$querywe = $db->query("select distinct  fm from user_login_log");
 ?>
 <style type="text/css">
 	@import "include/datepick/jquery.datepick.css";
@@ -119,6 +110,7 @@ $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
 		height: expression(this.height > 100 ? 100: true)
 	}
 </style>
+
 <div class="right_b">
 	<form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
 		<table cellpadding="0" cellspacing="0" class="menutable" height="100%">
@@ -127,13 +119,19 @@ $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
 			</tr>
 			<tr>                   
 				<td width="150" align="center">ID查詢</td>
-				<td width="25%"><input type="text" name="keyi" id="keyi" value="<?=$_GET['keyi']?>" /></td>	
-				<?=$_GET['keyi']?>
+				<td width="25%"><input type="text" name="key_id" id="key_id" value="<?=$_GET['key_id']?>" /></td>	
 				<td width="150" align="center">姓名</td>
-				<td width="25%"><input type="text" name="keyn" id="keyn" value="<?=$_GET['keyn']?>" /></td>		
+				<td width="25%"><input type="text" name="key_name" id="key_name" value="<?=$_GET['key_name']?>" /></td>		
 				<td width="150" align="center">登入網站</td>
-				<td width="25%"><input type="text" name="keya" id="keya" value="<?=$_GET['keya']?>" /></td>		
-			</tr>	                
+				<td width="25%">					
+					<select name="fm" id="fm" >
+						<option value="" >請選擇</option>
+						<?while($wl = $db->fetch_array($querywe)){?>
+						<option value="<?=$wl['fm']?>" <?if ($_GET['fm'] == $wl["fm"]) { echo 'selected="selected"'; } ?> ><?=$wl['fm']?></option>					
+						<?}?>
+					</select>
+				</td>	
+				</tr>	                
 			<tr>	                
 				<td width="150" align="center">登入日期</td>
 				<td>從 <input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d2" id="d2" class="date_pick" value="<?=$_GET['d2']?>" style="width:70px;" maxlength="10" /></td>					
@@ -144,22 +142,13 @@ $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
 							<?=($x%11==0)?'<br>':'';?>
 								<? ++$x;}?>
 				</td>
-				</tr>	                				
-<!-- 			<tr>
-				<td align="center">ID查詢</td>
-				<td colspan="5"><input type="radio" name="mi" id="mi" value="" <?=empty($_GET['mi'])? ' checked="checked"': '';?> />不拘
-					<? $x=1;foreach($eAdmin as $k => $v){?><input type="radio" name="mi" id="mi"  value="<?=$k?>" <?=($k==$_GET['mi'] && ck_num($_GET['mi']))? ' checked="checked"': '';?> />
-						<?=$v;?>
-							<?=($x%12==0)?'<br>':'';?>
-								<? ++$x;}?>
-				</td>					
-			</tr> -->				
+				</tr>	                							
 			<tr>
 				<td colspan="9"><input type="submit" value="送出" /><input type="hidden" name="pid" value="<?=$_GET['pid']?>" /></td>
 			</tr>
 		</table>
 	</form>
-</div>
+
 <!--第二區塊-->	
 <div class="right_b" >
 	<table cellpadding="0" cellspacing="0" class="menutable" id="log_login">
@@ -246,6 +235,7 @@ $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
 			<? }?>
 	</table>
 </div>
+
 <script type="text/javascript">
 	$(".date_pick").datepick({
 		dateFormat: 'yy-mm-dd',

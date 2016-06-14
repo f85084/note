@@ -1,13 +1,17 @@
 <? session_start();
 include('include/no_login.php');
 include('../include/common.php');
+include('../include/color_array.php');
 if(empty($_SERVER['HTTP_REFERER']) || !substr_count($_SERVER['HTTP_REFERER'],$webadmin_config['http_website'])){ exit();}
-$thorid='a41';
-if(!in_array($thorid,$p_array)){header("Location:index.php"); exit();}
+$thorid='e41';
+ if(!in_array($thorid,$p_array) || empty($_GET['id'])){header("Location:index.php"); exit();} 
+$_GET=ck_gp($_GET);
+$id=m_esc($_GET['id']);
+$query=$db->query("SELECT * FROM user where id='$id'");
+$da=$db->fetch_array($query);
+if(empty($da['id'])){header("Location:index.php"); exit();} 
 $error='';
 $today=date("Y,m,d H:i:s");
-$etime=0000-00-00;
-$fm='後台管理者';
 if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$_POST=m_esc(ck_gp($_POST));
 	$account=$_POST['account'];
@@ -27,17 +31,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$address =$_POST['address'];	
 	$status=ck_num($_POST['status'])?$_POST['status']:0;
 	$ulevel=ck_num($_POST['ulevel'])?$_POST['ulevel']:0;
-	$ctime=$_POST['ctime'];
-	$cip=$_POST['cip'];
+	$etime=$_POST['etime'];
 	$fmid=$_POST['fmid'];
 	$intro=$_POST['intro'];
-	$ip = $_SERVER["REMOTE_ADDR"];	
-	if(!preg_match('/^(?=.*[a-zA-Z09.-_])(?!.*[\@#$%^&+=!]).{1,}$/',$account)){$error.='帳號格是錯誤  必須符合 大小寫英文數字 .-_\r\n';}	
-	$query_rid = $db->query("SELECT COUNT(*) FROM user where account='$account'");
-	$q_rid = $db->fetch_row($query_rid);
-	$res_rid = $q_rid[0];	
-	if($res_rid!=0){$error.='帳號已有人使用!\r\n';}
-	if(!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pw'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
+	if(!empty($_POST['pw']) && !preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pw'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
 	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
 	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
@@ -49,17 +46,26 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(!empty($country) && !preg_match('/^\d{1,}$/', $country)){$error.='國家代碼 必須為數字\r\n';} 
 	if(!empty($zip) && !preg_match('/^\d{1,}$/', $zip)){$error.='郵遞區號 必須為數字\r\n';} 
 	if(empty($error)){ 
-			$querya=$db->query("INSERT INTO user (id,account,pw,mobile_country_code,mobile,name,nickname,sex,birthday,email,zip,address,status,ulevel,ctime,etime,cip,fm,fmid,intro)
-			VALUES ('$id','$account','$pw','$mobile_country_code','$mobile','$name','$nickname','$sex','$birthday','$email','$zip','$address','$status','$ulevel','$today','$etime','$ip','$fm','$fmid','$intro')");
+	 $db->query("UPDATE user SET account='$account',pw='$pw',mobile_country_code='$mobile_country_code',mobile='$mobile',nickname='$nickname',birthday='$birthday',sex='$sex',email='$email',country='$country',zip='$zip',address='$address',status='$status',ulevel='$ulevel',etime='$today',fmid='$fmid',intro='$intro' WHERE id='$_POST[id]'");
  			$id=$db->insert_id();
-			$descrip="add user_manage_add.php account=$account name=$name";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('41','$user_name','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
-			$error='ok';	 
+			$descrip="edit user_manage_edit.php id=$da[id] name=$name";
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+ 			$error='ok';	
 	 	}	
-	}		
+	}	
 $user_sex=array(0=>'女',1=>'男');
 $user_status=array(0=>'關閉',1=>'開啟');
 $user_ulevel=array(0=>'未認證',1=>'已認證');
+/*生日*/
+$sql = "SELECT * FROM user where id=$id";
+$rs = $db->query($sql);
+$r = mysql_fetch_assoc($rs);
+$byear = (int)substr($r['birthday'], 0, 4);
+$by=str_pad($byear, 4, '0', STR_PAD_LEFT);
+$bmonth = (int)substr($r['birthday'], 5, 2);
+$bm=str_pad($bmonth, 2, '0', STR_PAD_LEFT);
+$bday = (int)substr($r['birthday'], 8, 2);
+$bd=str_pad($bday, 2, '0', STR_PAD_LEFT);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -81,19 +87,9 @@ function check_empty() {
 	ierror = 0;
 	message = '';
 				
-	if (form1.account.value == "") {
-		message+='請輸入帳號\r\n';
-		ierror=1;
-				}	
-var caRegExp =  /^(?=.*[a-zA-Z09.-_])(?!.*[,\@#$%^&+=!]).{1,}$/;				
-		ca=strim(document.form1.account.value );
-	if(!caRegExp.test(ca)){
-		message+='帳號格是錯誤  必須符合 大小寫英文數字 .-_\r\n';
-		ierror=1;
-		}	 
 var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
 		cpw=strim(document.form1.pw.value);
-	if(!cpwRegExp.test(cpw)){
+	if(form1.pw.value != "" && !cpwRegExp.test(cpw)){
 		message+='密碼需6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';
 		ierror=1;
 				}	               
@@ -177,111 +173,134 @@ var czRegExp =  /^\d{1,}$/;
 <form name="form1" id="form1" action="" enctype="multipart/form-data" method="post" onSubmit="">
 	<table cellpadding="0" cellspacing="0" class="menutable">
 		<tr>
-			<td class="tableTitle" colspan="10">人員新增</td>
+			<td class="tableTitle" colspan="10">人員修改</td>
 		</tr>
 		<tr>
 			<td align="center">帳號</td>
-			<td><input type="text" name="account" id="account" style="width:200px;" /><font color="#FF0000">*</font>	</td>
+			<td><?=$da['account']?></td>
+			<input type="hidden" name="id" value="<?=$da['id']?>">	
+			<input type="hidden" name="account" value="<?=$da['account']?>">			
 		</tr>
 		<tr>
 			<td align="center">密碼</td>
-			<td><input type="password"  name="pw" id="pw"  style="width:200px;" /><font color="#FF0000">*</font>	</td>
+			<td><input type="password"  name="pw" id="pw"  style="width:200px;" /></td>
 		</tr>
 		<tr>					 
 			<td width="150" align="center">再重複一次密碼</td>
-			<td><input type="password" name="pw2" id="pw2" style="width:200px;"> <font color="#FF0000">*</font>	</td>
+			<td><input type="password" name="pw2" id="pw2" style="width:200px;"></td>
 		</tr>					
 		<tr>				
 			<td align="center">姓名</td>
-			<td><input type="text" name="name" id="name" style="width:200px;" /> <font color="#FF0000">*</font>	</td>				
+			<td><input type="text" name="name"  value="<?=$da['name']?>"/><font color="#FF0000">*</font></td>
 		</tr>
 		<tr>				
 			<td align="center">暱稱</td>
-			<td><input type="text" name="nickname" id="nickname" style="width:200px;" /> <font color="#FF0000">*</font>	</td>				
+			<td><input type="text" name="nickname" value="<?=$da['nickname']?>" /><font color="#FF0000">*</font></td>				
 		</tr>
 		<tr>
 			<td align="center">性別</td>
 			<td>
 				<select name="sex" id="sex">
-					<option value="" >請選擇性別</option>
+					<option value="<?= $da['sex']; ?>" ><?= $user_sex[$da['sex']]; ?></option>
 					<?foreach($user_sex as $key => $value){?>
 					<option value="<?=$key?>"><?= $value; ?></option>
 					<?}?>
 				</select>					
 				<font color="#FF0000">*</font>					
 			</td>
-		</tr>		
+		</tr>				
 		<tr>
 			<td align="center">生日</td>
 			<td>
 				<select name="byear" id="byear">
-					<option value=""></option>
+					<option value="<?= $by; ?>" ><?= $by; ?></option>
 					<? for ($i=1960; $i<=2016; $i++) {?>
-					<option value="<?=$i?>"><?= $i; ?></option>
+					<option value="<?=$i?>" ><?= str_pad($i, 4, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
 				</select> 年
-				<select name="bmonth" id="bmonth">
-					<option value=""></option>
+				 <select name="bmonth" id="bmonth">
+					<option value="<?= $bm; ?>" ><?= $bm; ?></option>
 					<? for ($i=1; $i<=12; $i++) {?>
 					<option value="<?=$i?>" ><?= str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
 				</select>月
 				<select name="bday" id="bday">
-					<option value=""></option>
+					<option value="<?= $bd; ?>" ><?= $bd; ?></option>
 					<? for ($i=1; $i<=31; $i++) {?>
 					<option value="<?=$i?>" ><?=  str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
 					<? } ?>
 				</select>日	
-				<font color="#FF0000">*</font>						
 			</td>	  
 		</tr>
 		<tr>
 			<td align="center">信箱</td>
-			<td><input type="text" name="email" id="email" style="width:300px;" /><font color="#FF0000">*</font>	</td>
+			<td><input type="text" name="email" style="width:300px;" value="<?=$da['email']?>" /><font color="#FF0000">*</font>	</td>
 		</tr>
 		<tr>
 			<td align="center">帳號狀態</td>
-			<td><input type="radio" value="0" name="status" checked="checked" /> 關閉&nbsp;&nbsp;<input type="radio" value="1" name="status" />開啟
+			<td><input name="status" id="status" type="radio" value="0" <? if ($da[ 'status']=='0' ) { ?> checked="checked"
+				<? } ?> /> 關閉&nbsp;&nbsp;
+				<input type="radio" name="status" id="status" value="1" <? if ($da[ 'status']=='1' ) { ?> checked="checked"
+				<? } ?> /> 開啟
 			<font color="#FF0000">*</font>	
 			</td>
 		</tr>		
 		<tr>
 			<td align="center">認證狀態</td>
-				<td><input type="radio" value="0" name="ulevel" checked="checked" /> 未認證&nbsp;&nbsp;<input type="radio" value="1" name="ulevel" />已認證
+			<td><input name="ulevel" id="ulevel" type="radio" value="0" <? if ($da[ 'ulevel']=='0' ) { ?> checked="checked"
+				<? } ?> /> 未認證&nbsp;&nbsp;
+				<input type="radio" name="ulevel" id="ulevel" value="1" <? if ($da[ 'ulevel']=='1' ) { ?> checked="checked"
+				<? } ?> /> 已認證				
 				<font color="#FF0000">*</font>					
 			</td>
 		</tr>		
 		<tr>
-			<td align="center">手機國碼 / 手機</td>
-			<td><input type="text" name="mobile_country_code" id="mobile_country_code" style="width:50px;" /> / <input type="text" name="mobile" id="mobile" style="width:200px;" /></td>
+			<td align="center">手機國碼 / 手機 </td>
+			<td><input type="text" name="mobile_country_code" style="width:50px;" value="<?=$da['mobile_country_code']?>" /> / <input type="text" name="mobile" style="width:200px;" value="<?=$da['mobile']?>" /></td>
 		</tr>
 		<tr>
 			<td align="center">國家代碼</td>
-			<td><input type="text" name="country" id="country" style="width:200px;" /></td>
+			<td><input type="text" name="country" value="<?=$da['country']?>" /></td>
 		</tr>		
 		<tr>
 			<td align="center">郵遞區號 / 地址</td>
-			<td><input type="text" name="zip" id="zip" style="width:50px;" /> / <input type="text" name="address" id="address" style="width:300px;" /></td>
+			<td><input type="text" name="zip" style="width:50px;" value="<?=$da['zip']?>" /> / <input type="text" name="zip" style="width:300px;" value="<?=$da['zip']?>" /></td>
 		</tr>				
 		<tr>
 			<td align="center">外部註冊ID</td>
-			<td><input type="text" name="fmid" id="fmid" style="width:200px;" /></td>
+			<td><input type="text" name="fmid" value="<?=$da['fmid']?>" /></td>
 		</tr>			
 		<tr>
 			<td align="center">備註</td>
-			<td><input type="text" name="intro" id="intro" style="width:200px;" /></td>
-		</tr>
+			<td>
+				<textarea  name="intro" id="intro" style="width:200px;" value="<?=$da['intro']?>"><?=$da['intro']?> </textarea>
+			</td>			
+		</tr>		
+		<tr>				
+			<td align="center">註冊IP</td>
+			<td><?=$da['cip']?></td>	
+		</tr>				
+		<tr>				
+			<td align="center">建立時間</td>
+			<td><?=$da['ctime']?></td>
+			<input type="hidden" name="ctime" value="<?=$da['ctime']?>">					
+		</tr>				
+		<tr>				
+			<td align="center">編輯時間</td>
+			<td><?=$da['etime']?></td>
+			<input type="hidden" name="etime" value="<?=$da['etime']?>">					
+		</tr>				
 		<tr>
 			<td colspan="10" align="center">
-			<div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
+				<div id="subm_1" style="height:20px;"><input type="button" value="送出" onclick="check_empty(this,'check',true);" /></div><input type="hidden" name="act" value="add" />
 			</td>
 		</tr>
 	</table>
 </form>
 <? if($error=='ok'){?>
 <script>
-alert('新增成功');
-parent.referu('index.php?pid=41');
+alert('更新成功');
+parent.referu('');
 </script>
 <? }elseif(!empty($error)){?>
 <script>
@@ -289,6 +308,6 @@ alert('<?=$error?>');
 history.go(-1)
 </script>
 <? }?>
+    </body>
 
-</body>
-</html>
+    </html>

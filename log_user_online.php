@@ -9,51 +9,85 @@ $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
 /*選擇日期開始*/
-if(!empty($_GET['d1'])){
+if(!empty($_GET['d1']) && !empty($_GET['d2'])){
 	$d1=$_GET['d1']." 00:00:00";
+	$d2=$_GET['d2']." 23:59:59";
 	$d1=strtotime($d1);
-	$wherea[]="stimef >= '".m_esc($d1)."'";
-	$lurl.="&d1=".$_GET['d1'];
-	$logw[]="stimef >= ".m_esc($_GET['d1']);
+	$d2=strtotime($d2);
+	$wherea[]="stime >= '".m_esc($d1)."'";
+	$wherea[]="stime <= '".m_esc($d2)."'";
+	$lurl.="&d1=".$_GET['d1']."&d2=".$_GET['d2'];
+	$logw[]="stime >= ".m_esc($_GET['d1'])." and stime <=".m_esc($_GET['d2']);
 }elseif(!empty($_GET['d1'])){
 	$d1=$_GET['d1']." 00:00:00";
 	$d1=strtotime($d1);
-	$wherea[]="stimef >='".m_esc($d1)."'";
+	$wherea[]="stime >='".m_esc($d1)."'";
+	//$_GET['d2']=gmdate('Y-m-d',strtotime($_GET['d1'])+7*86400+8*3600);
+	//$wherea[]="stimef <= '".m_esc($_GET['d2'])." 23:59:59'";
 	$lurl.="&d1=".$_GET['d1'];
-	$logw[]="stimef >= ".m_esc($d1);
+	$logw[]="stime >= ".m_esc($d1);
+}elseif(!empty($_GET['d2'])){
+	$d2=$_GET['d2']." 23:59:59";
+	$d2=strtotime($d2);
+	$wherea[]="stime <= '".m_esc($d2)."'";
+	//$_GET['d1']=gmdate('Y-m-d',strtotime($_GET['d2'])-7*86400+8*3600);
+	//$wherea[]="stimef >='".m_esc($_GET['d1'])." 00:00:00'";
+	$lurl.="&d2=".$_GET['d2'];
+	$logw[]="and stime <=".m_esc($d2);
+}else{
+	//$_GET['d1']=gmdate('Y-m-d',$stimeftamp-30*86400+8*3600);
+	//$_GET['d2']=gmdate('Y-m-d',$stimeftamp-86400+8*3600);
+	//$wherea[]="stimef >= '".m_esc($_GET['d1'])." 00:00:00'";
+	//$wherea[]="stimef <= '".m_esc($_GET['d2'])." 23:59:59'";
+	//$lurl.="&d1=".$_GET['d1']."&d2=".$_GET['d2'];
+	//$logw[]="stimef >= ".m_esc($_GET['d1'])."and stimef <=".m_esc($_GET['d2']);
 }
 /*選擇日期結束*/
-if(!empty($_GET['d3'])){
+if(!empty($_GET['d3']) && !empty($_GET['d4'])){
 	$d3=$_GET['d3']." 00:00:00";
+	$d4=$_GET['d4']." 23:59:59";
 	$d3=strtotime($d3);
-	$wherea[]="etimef >= '".m_esc($d3)."'";
-	$lurl.="&d3=".$_GET['d3'];
-	$logw[]="etimef >= ".m_esc($_GET['d3']);
+	$d4=strtotime($d4);
+	$wherea[]="session.etime >= '".m_esc($d3)."'";
+	$wherea[]="session.etime <= '".m_esc($d4)."'";
+	$lurl.="&d3=".$_GET['d3']."&d4=".$_GET['d4'];
+	$logw[]="session.etime >= ".m_esc($_GET['d3'])." and session.etime <=".m_esc($_GET['d4']);
 }elseif(!empty($_GET['d3'])){
 	$d3=$_GET['d3']." 00:00:00";
 	$d3=strtotime($d3);
-	$wherea[]="etimef >='".m_esc($d3)."'";
+	$wherea[]="session.etime >='".m_esc($d3)."'";
+	//$_GET['d2']=gmdate('Y-m-d',strtotime($_GET['d1'])+7*86400+8*3600);
+	//$wherea[]="etimef <= '".m_esc($_GET['d2'])." 23:59:59'";
 	$lurl.="&d3=".$_GET['d3'];
-	$logw[]="etimef >= ".m_esc($d3);
+	$logw[]="session.etime >= ".m_esc($d3);
+}elseif(!empty($_GET['d4'])){
+	$d4=$_GET['d4']." 23:59:59";
+	$d4=strtotime($d4);
+	$wherea[]="session.etime <= '".m_esc($d4)."'";
+	//$_GET['d1']=gmdate('Y-m-d',strtotime($_GET['d2'])-7*86400+8*3600);
+	//$wherea[]="etimef >='".m_esc($_GET['d1'])." 00:00:00'";
+	$lurl.="&d4=".$_GET['d4'];
+	$logw[]="and session.etime <=".m_esc($d4);
+}else{
+	//$_GET['d1']=gmdate('Y-m-d',$etimeftamp-30*86400+8*3600);
+	//$_GET['d2']=gmdate('Y-m-d',$etimeftamp-86400+8*3600);
+	//$wherea[]="etimef >= '".m_esc($_GET['d1'])." 00:00:00'";
+	//$wherea[]="etimef <= '".m_esc($_GET['d2'])." 23:59:59'";
+	//$lurl.="&d1=".$_GET['d1']."&d2=".$_GET['d2'];
+	//$logw[]="etimef >= ".m_esc($_GET['d1'])."and etimef <=".m_esc($_GET['d2']);
 }
 /*搜尋*/
-if(ck_num($_GET['keyi'])){
-	$keyw=m_esc($_GET['keyi']);
-	$wherea[]="uid like '%".m_esc($_GET['keyi'])."%'";
+if($_GET['keyi']){
+	$keyi=m_esc($_GET['keyi']);
+	$wherea[]="user.account like '%".m_esc($_GET['keyi'])."%'";
 	$lurl.="&keyi=".rawurlencode(ds($_GET['keyi']));
-	$logw[]="keyi = ".$keyi;
+	$logw[]="account like ".$keyi;
 }
-
 /*單選*/
 if (ck_num($_GET['int'])){
 	$wherea[]="in_t='".m_esc($_GET['int'])."'";
 	$lurl.="&int=".$_GET['int'];
 	$logw[]="in_t = ".m_esc($_GET['int']);
-}
-if(!empty($_GET['mi'])){
-	$wherea[]="uid='".m_esc($_GET['mi'])."'";
-	$lurl.="&mi=".$_GET['mi'];
-	$logw[]="uid = ".m_esc($_GET['mi']);
 }
 /*帶入尋找*/
 if(!empty($wherea)){
@@ -61,15 +95,15 @@ if(!empty($wherea)){
 	$logws=implode(' and ',$logw);
 }
 /*寫入log*/
-/* $descrip="view user_login.php ".$logws;
-$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
- */$rownum = 20; 
+$descrip="view log_user_online.php ".$logws;
+$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$stimeftamp','$descrip')");
+$rownum = 20; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
-$querya=$db->query("SELECT uid,ip,stimef,etimef FROM  session  $where  order by etimef desc"." LIMIT $TP, $rownum");
+$querya=$db->query("SELECT session.uid,session.ip,session.stimef,session.stime,session.etimef,session.etime,user.account FROM  session LEFT join user on session.uid= user.id  $where  order by etimef desc"." LIMIT $TP, $rownum");
 
 /*下一頁*/
-$query_num = $db->query("SELECT COUNT(*) FROM session ".$where);
+$query_num = $db->query("SELECT COUNT(*) FROM session LEFT join user on session.uid= user.id".$where);
 			$q_num = $db->fetch_row($query_num);
 			$product_page_num = $q_num[0];		
 			$page_change 	  = ceil($product_page_num/$rownum);
@@ -81,11 +115,6 @@ $querye = $db->query("SELECT id,account from user");
 $eAdmin=array();
 while($e = $db->fetch_array($querye)){
 	$eAdmin[$e['id']]=$e['account'];
-}
-$queryer = $db->query("SELECT id,account from user");
-$erAdmin=array();
-while($er = $db->fetch_array($queryer)){
-	$erAdmin[$e['account']]=$e['id'];
 }
 ?>
 <style type="text/css">
@@ -109,12 +138,11 @@ while($er = $db->fetch_array($queryer)){
 			</tr>
 			<tr>                   
 				<td width="150" align="center">ID查詢</td>
-				<td width="25%"><input type="text" name="keyi" id="keyi" value="<?=$_GET['keyi']?>" /></td>	
-				<?=$_GET['keyi']?>	                
+				<td width="25%"><input type="text" name="keyi" id="keyi" value="<?=$_GET['keyi']?>" /></td>	           
 				<td width="150" align="center">開始時間</td>
-				<td><input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:90px;" maxlength="10" /></td>					
+				<td>從 <input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d2" id="d2" class="date_pick" value="<?=$_GET['d2']?>" style="width:70px;" maxlength="10" /></td>					
 				<td width="150" align="center">最後時間</td>
-				<td><input type="text" name="d3" id="d3" class="date_pick" value="<?=$_GET['d3']?>" style="width:90px;" maxlength="10" /></td>					
+				<td>從 <input type="text" name="d3" id="d3" class="date_pick" value="<?=$_GET['d3']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d4" id="d4" class="date_pick" value="<?=$_GET['d4']?>" style="width:70px;" maxlength="10" /></td>					
 			</tr>	                							
 			<tr>
 				<td colspan="9"><input type="submit" value="送出" /><input type="hidden" name="pid" value="<?=$_GET['pid']?>" /></td>
@@ -151,7 +179,7 @@ while($er = $db->fetch_array($queryer)){
 				<td width="20%" align="center">使用者ID</td>						
 				<td width="20%" align="center">IP</td>
 				<td width="25%" align="center">開始時間</td>
-				<td width="25%" align="center">最候時間</td>
+				<td width="25%" align="center">最後時間</td>
 			</tr>				
 		<? $i=0; $black='#FFFFCC'; $bg=($i%2==1)?$black:'';?>
 		<?while($al = $db->fetch_array($querya)){ ?>

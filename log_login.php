@@ -43,10 +43,11 @@ if(!empty($_GET['d1']) && !empty($_GET['d2'])){
 	//$logw[]="times >= ".m_esc($_GET['d1'])."and times <=".m_esc($_GET['d2']);
 }
 /*搜尋*/
-if(!empty($_GET['keyi'])){
-	$wherea[]="ip like '%".m_esc($_GET['keyi'])."%'";
-	$lurl.="&keyi=".rawurlencode(ds($_GET['keyi']));
-    $logw[]="keyi = ".$keyi;
+if(!empty($_GET['key_ip'])){
+	$key_ip=m_esc($_GET['key_ip']);
+	$wherea[]="ip like '%".m_esc($_GET['key_ip'])."%'";
+	$lurl.="&key_ip=".rawurlencode(ds($_GET['key_ip']));
+    $logw[]="key_ip = ".$key_ip;
 }
 /*單選*/
 
@@ -110,7 +111,7 @@ $use_in=array(0=>'失敗', 1=>'成功');
 			</tr>
 			<tr>                   
 				<td width="150" align="center">IP查詢</td>
-				<td width="25%"><input type="text" name="keyi" id="keyi" value="<?=$_GET['keyi']?>" /></td>		
+				<td width="25%"><input type="text" name="key_ip" id="key_ip" value="<?=$_GET['key_ip']?>" /></td>		
 				<td width="150" align="center">登入日期</td>
 				<td>從 <input type="text" name="d1" id="d1" class="date_pick" value="<?=$_GET['d1']?>" style="width:70px;" maxlength="10" />~到 <input type="text" name="d2" id="d2" class="date_pick" value="<?=$_GET['d2']?>" style="width:70px;" maxlength="10" /></td>					
 			    <td align="center">登入狀態</td>
