@@ -48,26 +48,26 @@ if(!empty($_GET['d3']) && !empty($_GET['d4'])){
 	$d4=$_GET['d4']." 23:59:59";
 	$d3=strtotime($d3);
 	$d4=strtotime($d4);
-	$wherea[]="session.etime >= '".m_esc($d3)."'";
-	$wherea[]="session.etime <= '".m_esc($d4)."'";
+	$wherea[]="A.etime >= '".m_esc($d3)."'";
+	$wherea[]="A.etime <= '".m_esc($d4)."'";
 	$lurl.="&d3=".$_GET['d3']."&d4=".$_GET['d4'];
-	$logw[]="session.etime >= ".m_esc($_GET['d3'])." and session.etime <=".m_esc($_GET['d4']);
+	$logw[]="A.etime >= ".m_esc($_GET['d3'])." and A.etime <=".m_esc($_GET['d4']);
 }elseif(!empty($_GET['d3'])){
 	$d3=$_GET['d3']." 00:00:00";
 	$d3=strtotime($d3);
-	$wherea[]="session.etime >='".m_esc($d3)."'";
+	$wherea[]="A.etime >='".m_esc($d3)."'";
 	//$_GET['d2']=gmdate('Y-m-d',strtotime($_GET['d1'])+7*86400+8*3600);
 	//$wherea[]="etimef <= '".m_esc($_GET['d2'])." 23:59:59'";
 	$lurl.="&d3=".$_GET['d3'];
-	$logw[]="session.etime >= ".m_esc($d3);
+	$logw[]="A.etime >= ".m_esc($d3);
 }elseif(!empty($_GET['d4'])){
 	$d4=$_GET['d4']." 23:59:59";
 	$d4=strtotime($d4);
-	$wherea[]="session.etime <= '".m_esc($d4)."'";
+	$wherea[]="A.etime <= '".m_esc($d4)."'";
 	//$_GET['d1']=gmdate('Y-m-d',strtotime($_GET['d2'])-7*86400+8*3600);
 	//$wherea[]="etimef >='".m_esc($_GET['d1'])." 00:00:00'";
 	$lurl.="&d4=".$_GET['d4'];
-	$logw[]="and session.etime <=".m_esc($d4);
+	$logw[]="and A.etime <=".m_esc($d4);
 }else{
 	//$_GET['d1']=gmdate('Y-m-d',$etimeftamp-30*86400+8*3600);
 	//$_GET['d2']=gmdate('Y-m-d',$etimeftamp-86400+8*3600);
@@ -79,7 +79,7 @@ if(!empty($_GET['d3']) && !empty($_GET['d4'])){
 /*搜尋*/
 if($_GET['keyi']){
 	$keyi=m_esc($_GET['keyi']);
-	$wherea[]="user.account like '%".m_esc($_GET['keyi'])."%'";
+	$wherea[]="B.account like '%".m_esc($_GET['keyi'])."%'";
 	$lurl.="&keyi=".rawurlencode(ds($_GET['keyi']));
 	$logw[]="account like ".$keyi;
 }
@@ -100,10 +100,10 @@ $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) 
 $rownum = 20; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
-$querya=$db->query("SELECT session.uid,session.ip,session.stimef,session.stime,session.etimef,session.etime,user.account FROM  session LEFT join user on session.uid= user.id  $where  order by etimef desc"." LIMIT $TP, $rownum");
+$querya=$db->query("SELECT A.uid,A.ip,A.stimef,A.stime,A.etimef,A.etime,B.account FROM  session as A LEFT join user as B on A.uid= B.id   $where  order by etimef desc"." LIMIT $TP, $rownum");
 
 /*下一頁*/
-$query_num = $db->query("SELECT COUNT(*) FROM session LEFT join user on session.uid= user.id".$where);
+$query_num = $db->query("SELECT COUNT(*) FROM session as A LEFT join user as B on A.uid= B.id".$where);
 			$q_num = $db->fetch_row($query_num);
 			$product_page_num = $q_num[0];		
 			$page_change 	  = ceil($product_page_num/$rownum);

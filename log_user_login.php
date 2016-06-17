@@ -148,7 +148,7 @@ $querywe = $db->query("select distinct  fm from user_login_log");
 			</tr>
 		</table>
 	</form>
-
+</div>
 <!--第二區塊-->	
 <div class="right_b" >
 	<table cellpadding="0" cellspacing="0" class="menutable" id="log_login">

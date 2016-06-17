@@ -114,7 +114,7 @@ $querywe = $db->query("select distinct  fm from user");
         <form name="form1" id="form1" action="" enctype="multipart/form-data" method="get">
             <table cellpadding="0" cellspacing="0" class="menutable" height="100%">
                 <tr>
-                    <td class="tableTitle" colspan="10">管理員列表</td>
+                    <td class="tableTitle" colspan="10">使用者列表</td>
                 </tr>
                 <tr>
                     <td width="150" align="center">搜尋(帳號)</td>
