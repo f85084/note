@@ -84,7 +84,7 @@ if(!empty($wherea)){
 $rownum = 20; 
 IF($_GET["ToPage"] > "1" && ck_num($_GET["ToPage"]))	
 { $TP = ($_GET["ToPage"]-1)*$rownum; }	ELSE	{ $TP = 0; }
-$querya=$db->query("SELECT id,account,mobile_country_code,mobile,name,nickname,sex,birthday,email,zip,address,status,ulevel,ctime,etime,cip,fm,fmid,intro FROM user  $where  order by  id  DESC"." LIMIT $TP, $rownum");
+$querya=$db->query("SELECT id,account,name,sex,email,status,ulevel,ctime,etime,cip,fm FROM user  $where  order by  id  DESC"." LIMIT $TP, $rownum");
 /*寫入log*/
 $descrip="view user_manage.php ".$logws;
 $db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('$tid','0','$admin_d[uid]','0','$timeformat','$timestamp','$descrip')");
@@ -140,7 +140,7 @@ $querywe = $db->query("select distinct  fm from user");
                                     <? ++$x;}?>
                     </td>                    
 					<td width="150" align="center">認證</td>
-					<td "><input type="radio" name="mi" id="mi" value="" <?=empty($_GET['mi'])? ' checked="checked"': '';?> />不拘
+					<td><input type="radio" name="mi" id="mi" value="" <?=empty($_GET['mi'])? ' checked="checked"': '';?> />不拘
 						<? $x=1;foreach($user_ulevel as $k => $v){?><input type="radio" name="mi" id="mi"  value="<?=$k?>" <?=($k==$_GET['mi'] && ck_num($_GET['mi']))? ' checked="checked"': '';?> />
 							<?=$v;?>
 								<?=($x%3==0)?'<br>':'';?>
@@ -208,7 +208,7 @@ $querywe = $db->query("select distinct  fm from user");
 				<td width="10%" align="center">功能</td>									
 			</tr>				
 		<? $i=0; $black='#FFFFCC'; $bg=($i%2==1)?$black:'';?>
-		<?while($al = $db->fetch_array($querya)){ ?>
+		<? while($al = $db->fetch_array($querya)){ ?>
 			<tr class="chbg" bgcolor="<?=$bg?>">
 				<td align="center">
 					<?=ht($al['id'])?>

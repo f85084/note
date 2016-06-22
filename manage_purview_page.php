@@ -26,9 +26,8 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(!empty($allthor)&&!preg_match('/^[a-z0-9,]{1,}$/',$allthor)){$error.='小寫英文a-z 或 數字0-9 以,半形逗號隔開 \r\n';} 
     file_put_contents($file,$allthor); 
 	if(empty($error)){ 
-  			$id=$db->insert_id();
 			$descrip="add manage_purview_page.php uid=$da[uid] user_name=$da[user_name]";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$uid','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
  			$error='ok';	
 	 	}	
 	}	

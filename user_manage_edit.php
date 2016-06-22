@@ -47,9 +47,8 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(!empty($zip) && !preg_match('/^\d{1,}$/', $zip)){$error.='郵遞區號 必須為數字\r\n';} 
 	if(empty($error)){ 
 	 $db->query("UPDATE user SET account='$account',pw='$pw',mobile_country_code='$mobile_country_code',mobile='$mobile',nickname='$nickname',birthday='$birthday',sex='$sex',email='$email',country='$country',zip='$zip',address='$address',status='$status',ulevel='$ulevel',etime='$today',fmid='$fmid',intro='$intro' WHERE id='$_POST[id]'");
- 			$id=$db->insert_id();
 			$descrip="edit user_manage_edit.php id=$da[id] name=$name";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','2','$timeformat','$timestamp','$descrip')");
  			$error='ok';	
 	 	}	
 	}	
@@ -82,7 +81,7 @@ function change_btn(st) {
 }	
 function strim(str){
 	return str.replace(/(^\s*)|(\s*$)/g, "");
-		}
+		}		
 function check_empty() {
 	ierror = 0;
 	message = '';
@@ -120,7 +119,7 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請選擇生日日期\r\n';
 		ierror=1;
 				}	
-var celRegExp =  /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+var celRegExp =  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 		cel=strim(document.form1.email.value );
 	if(!celRegExp.test(cel)){
 		message+='請輸入信箱格是錯誤 \r\n';
@@ -308,6 +307,6 @@ alert('<?=$error?>');
 history.go(-1)
 </script>
 <? }?>
-    </body>
+</body>
 
     </html>

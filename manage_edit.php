@@ -19,6 +19,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$user_name=$_POST['user_name'];
 	$pass_word=md5($_POST['pass_word']);	
 	$name=$_POST['name'];
+	$email=$_POST['email'];
 	$byear = $_POST['byear'];
 	$bmonth = $_POST['bmonth'];
 	$bday =$_POST['bday'];
@@ -44,6 +45,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(is_null($group_uid)){$error.='請輸入群組!\r\n';}
 	if(!empty($_POST['pass_word'])&&!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pass_word'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';}  
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
+	if(!empty($email)&&!preg_match('/^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}
 	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
 	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
 	if(empty($bday)){$error.='請輸入生日日期!\r\n';}
@@ -54,10 +56,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(is_null($blood)){$error.='請輸入血型\r\n';}
 	if(is_null($marry)){$error.='請輸入婚姻!\r\n';}
 	if(empty($error)){ 
-	 $db->query("UPDATE admin_info SET group_uid='$group_uid',user_name='$user_name',pass_word='$pass_word',name='$name',birthday='$birthday',sex='$sex',blood='$blood',marry='$marry',remark='$remark',start_date='$start_date',close_date='$close_date',user_level='$user_level',settime='$settime',del='$del',is_lock='$is_lock',phone='$phone',cellphone='$cellphone' WHERE uid='$_POST[uid]'");
+	 $db->query("UPDATE admin_info SET group_uid='$group_uid',user_name='$user_name',pass_word='$pass_word',name='$name',email='$email',birthday='$birthday',sex='$sex',blood='$blood',marry='$marry',remark='$remark',start_date='$start_date',close_date='$close_date',user_level='$user_level',settime='$settime',del='$del',is_lock='$is_lock',phone='$phone',cellphone='$cellphone' WHERE uid='$_POST[uid]'");
  			$id=$db->insert_id();
-			$descrip="add admin_system_add.php uid=$uid name=$name";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$descrip="add update manage_edit.php uid=$uid name=$name";
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$uid','$admin_d[uid]','2','$timeformat','$timestamp','$descrip')");
  			$error='ok';	
 	 	}	
 	}	
@@ -134,6 +136,12 @@ function check_empty() {
 		message+='請輸入姓名\r\n';
 		ierror=1;
 				}				
+	var celRegExp =  /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		cel=strim(document.form1.email.value );
+	if(form1.email.value != "" && !celRegExp.test(cel)){
+		message+='請輸入信箱格式錯誤 \r\n';
+		ierror=1;
+		}						
 	if (form1.byear.value == "") {
 		message+='請輸入生日年分\r\n';
 		ierror=1;
@@ -204,6 +212,10 @@ function check_empty() {
 			<td align="center">姓名</td>
 			<td><input type="text" value="<?=$da['name']?>" name="name" id="name" style="width:60px" /></td>
 		</tr>
+		<tr>
+			<td width="150" align="center">信箱</td> 
+			<td><input type="text" name="email" id="email"   value="<?=$da['email']?>"> </td>
+		</tr>		
 		<tr>
 			<td align="center">生日</td>
 			<td>

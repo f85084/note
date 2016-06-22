@@ -23,12 +23,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$_POST=m_esc(ck_gp($_POST));
 	$pid=implode(',',$_POST['pid']);
 	$group_uid=ck_num($_POST['group_uid'])?$_POST['group_uid']:0;
-
 	if(empty($error)){ 
 	 $db->query("UPDATE admin_info SET thor='$pid',group_uid='$group_uid' WHERE uid='$uid'");
- 			$id=$db->insert_id();
 			$descrip="add manage_purview.php uid=$uid user_name=$da[user_name]";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$uid','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
  		$error='ok';	
 	 	}	
 	}	

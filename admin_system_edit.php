@@ -144,7 +144,7 @@ function check_empty() {
 <? if($error=='ok'){?>
 <script>
 alert('更新成功');
-parent.referu('index.php?pid=36');
+parent.referu('');
 </script>
 <? }elseif(!empty($error)){?>
 <script>

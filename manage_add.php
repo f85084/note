@@ -4,7 +4,6 @@ include('../include/common.php');
 if(empty($_SERVER['HTTP_REFERER']) || !substr_count($_SERVER['HTTP_REFERER'],$webadmin_config['http_website'])){ exit();}
 $thorid='a38';
 if(!in_array($thorid,$p_array)){header("Location:index.php"); exit();}
-$query = $db->query("SELECT * FROM admin_info ");
 $error='';
 $today=date("Y,m,d");
 $close=0000-00-00;
@@ -15,6 +14,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$user_name=$_POST['user_name'];
 	$pass_word=md5($_POST['pass_word']);	
 	$name=$_POST['name'];
+	$email=$_POST['email'];
 	$byear = $_POST['byear'];
 	$bmonth = $_POST['bmonth'];
 	$bday =$_POST['bday'];
@@ -26,16 +26,11 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$user_level=$_POST['user_level'];
 	$settime=$_POST['settime'];
 	$del=$_POST['del'];
-	$is_lock=$_POST['is_lock'];
-		
+	$is_lock=$_POST['is_lock'];		
 	if(is_null($group_uid)){$error.='請輸入群組!\r\n';}
-	if(!preg_match('/^(?=.*[a-zA-Z])(?!.*[^\x21-\x7e])(?!.*[\@#$%^&+=!]).{1,}$/',$user_name)){$error.='帳號 必須符合 大小寫英文數字\r\n';}	
-	$query_rid = $db->query("SELECT COUNT(*) FROM admin_info where user_name='$user_name'");
-	$q_rid = $db->fetch_row($query_rid);
-	$res_rid = $q_rid[0];	
-	if($res_rid!=0){$error.='帳號已有人使用!\r\n';}
 	if(!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pass_word'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
+	if(!empty($email)&&!preg_match('/^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}
 	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
 	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
 	if(empty($bday)){$error.='請輸入生日日期!\r\n';}
@@ -44,10 +39,10 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	if(is_null($blood)){$error.='請輸入血型\r\n';}
 	if(is_null($marry)){$error.='請輸入婚姻!\r\n';}
 	if(empty($error)){ 
-			$querya=$db->query("INSERT INTO admin_info (group_uid,user_name,pass_word,name,birthday,sex,blood,marry,remark,start_date,close_date,user_level,settime,del,is_lock) VALUES ('$group_uid','$user_name','$pass_word','$name','$birthday','$sex','$blood','$marry','$remark','$today','$close','1','$timeformat','N','0')");
+			$querya=$db->query("INSERT INTO admin_info (group_uid,user_name,pass_word,name,email,birthday,sex,blood,marry,remark,start_date,close_date,user_level,settime,del,is_lock) VALUES ('$group_uid','$user_name','$pass_word','$name','$email','$birthday','$sex','$blood','$marry','$remark','$today','$close','1','$timeformat','N','0')");
  			$id=$db->insert_id();
-			$descrip="add manage_add.php user_name=$user_name name=$name";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$user_name','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$descrip="add manage_add.php id=$id  user_name=$user_name ";
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
 			$error='ok';	 
 	 	}	
 	}	
@@ -55,6 +50,7 @@ $admin_group=array(0=>'管理者',1=>'開發人員',2=>'編輯人員',3=>'網頁
 $admin_sex=array(0=>'女',1=>'男');
 $admin_blood=array(0=>'A',1=>'B',2=>'AB',3=>'O');
 $admin_marry=array(0=>'未婚',1=>'已婚');
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -79,11 +75,7 @@ function check_empty() {
 	if (form1.group_uid.value == "") {
 		message+='請選擇群組\r\n';
 		ierror=1;
-				}				
-	if (form1.name.value == "") {
-		message+='請輸入帳號\r\n';
-		ierror=1;
-				}				
+				}							
 var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
 		cpw=strim(document.form1.pass_word.value);
 	if(!cpwRegExp.test(cpw)){
@@ -101,6 +93,12 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請輸入姓名\r\n';
 		ierror=1;
 				}				
+	var celRegExp =  /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		cel=strim(document.form1.email.value );
+	if(form1.email.value != "" && !celRegExp.test(cel)){
+		message+='請輸入信箱格式錯誤 \r\n';
+		ierror=1;
+		}						
 	if (form1.byear.value == "") {
 		message+='請選擇生日年分\r\n';
 		ierror=1;
@@ -129,10 +127,39 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		change_btn('c');
 		alert(message);
 		change_btn('');
-	} else {
-		document.form1.submit();
-		setTimeout("change_btn('c')", 500);
-	}
+	} else{
+		//以下為ajax部分
+
+			if(form1.user_name.value == ''){
+				alert('請輸入帳號');
+			}else{
+				var user_name = $('#user_name').val();
+				$.ajax({
+					 url : "manage_add_ck.php", 
+					 data : { user_name : user_name}, 
+					 type : "POST", 
+					 dataType : "text", 
+					 error : function(xhr){ 
+						   is_auth_passed = false;
+						 },
+					 success : function(response){ 
+						if  (response == '1') {
+							is_auth_passed = true;
+							//alert(is_auth_passed);	
+							//alert('1');
+							document.form1.submit(); 	
+							setTimeout("change_btn('c')", 500);
+						} else {
+							is_auth_passed = false;
+							//alert(is_auth_passed);
+							alert('帳號已註冊過！');
+						}
+						//alert(response);
+						}
+						});		
+				}
+		}								
+	 
 }     
 </script> 
 </head>
@@ -171,6 +198,10 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 			<td align="center">姓名</td>
 			<td><input type="text" name="name" id="name" style="width:200px;" /> <font color="#FF0000">*</font>	</td>				
 		</tr>
+		<tr>
+			<td width="150" align="center">信箱</td> 
+			<td><input type="text" name="email" id="email"   style="width:200px;"> </td>
+		</tr>			
 		<tr>
 			<td align="center">生日</td>
 			<td>

@@ -10,6 +10,7 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
+$eAdmin=array();
 /*選擇日期*/
 if(!empty($_GET['d1']) && !empty($_GET['d2'])){
 	$d1=$_GET['d1']." 00:00:00";
@@ -88,12 +89,6 @@ $query_num = $db->query("SELECT COUNT(*) FROM user_login_log as A LEFT join user
 			$page_change 	  = ceil($product_page_num/$rownum);
 			$_GET=gt($_GET);	
 			$myURL 			  = "index.php?pid=".$_GET['pid'].$lurl."&ToPage=";
-/*編輯者*/
-$querye = $db->query("SELECT id,account from user");
-$eAdmin=array();
-while($e = $db->fetch_array($querye)){
-	$eAdmin[$e['id']]=$e['account'];
-}
 $use_in=array(0=>'失敗', 1=>'成功',2=>'cookie登入',3=>'登出');
 $querywe = $db->query("select distinct  fm from user_login_log");
 ?>
@@ -193,7 +188,7 @@ $querywe = $db->query("select distinct  fm from user_login_log");
 					<?=ht($al['id'])?>
 				</td>								
 				<td align="center">
-					<?=$eAdmin[$al['uid']]?>
+					<?$eAdmin[$al['uid']]=$al['account']; echo $eAdmin[$al['uid']]?>
 				</td>
 				<td align="center">
 					<?=ht($al['name']) ?>

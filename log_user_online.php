@@ -8,6 +8,7 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
+$eAdmin=array();
 /*選擇日期開始*/
 if(!empty($_GET['d1']) && !empty($_GET['d2'])){
 	$d1=$_GET['d1']." 00:00:00";
@@ -109,13 +110,6 @@ $query_num = $db->query("SELECT COUNT(*) FROM session as A LEFT join user as B o
 			$page_change 	  = ceil($product_page_num/$rownum);
 			$_GET=gt($_GET);	
 			$myURL 			  = "index.php?pid=".$_GET['pid'].$lurl."&ToPage=";
-
-/*編輯者*/
-$querye = $db->query("SELECT id,account from user");
-$eAdmin=array();
-while($e = $db->fetch_array($querye)){
-	$eAdmin[$e['id']]=$e['account'];
-}
 ?>
 <style type="text/css">
 	@import "include/datepick/jquery.datepick.css";
@@ -188,7 +182,7 @@ while($e = $db->fetch_array($querye)){
 					<?php if($_GET["ToPage"] != "") { echo ((($_GET["ToPage"]-1)*$rownum)+1+$i);} else { echo ($i+1); }?>
 				</td>							
 				<td align="center">
-					<?=$eAdmin[$al['uid']]?>
+					<?$eAdmin[$al['uid']]=$al['account']; echo $eAdmin[$al['uid']]?>
 				</td>
 				<td align="center">
 					<?=$al['ip']?>

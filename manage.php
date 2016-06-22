@@ -8,8 +8,6 @@ $logws='';
 $logw=array();
 $_GET=ck_gp($_GET);
 $lurl='';
-$query=$db->query("SELECT * FROM admin_info");
-$da=$db->fetch_array($query);
 if(!empty($_GET['keyid'])){
 	$wherea[]="user_name like '%".m_esc($_GET['keyid'])."%'";
 	$logw[]="user_name like ".m_esc($_GET['keyid']);
@@ -107,10 +105,9 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
                 <tr>
                     <td ><input type="submit" value="送出" /><input type="hidden" name="pid" value="<?=ht($_GET['pid'])?>" /></td>
 					<td colspan="9">
-					     <? if(in_array('a38',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:manage_add.php','800px','490px','iframe');" />
+					     <? if(in_array('a38',$p_array)){?><input type="button" value="新增人員" onclick="dialog('新增','iframe:manage_add.php','800px','520px','iframe');" />
                           <? }?>
 						 <? if(in_array('p38',$p_array)){?><input type="button" value="新增權限頁面" onclick="dialog('頁面權限','iframe:manage_purview_page.php','800px','315px','iframe');" />
-						    <input type="hidden" name="uid" value="<?=$da['uid']?>">
                             <? }?>	
                     </td>
                 </tr>
@@ -192,7 +189,7 @@ $admin_is_lock=array(0=>'未鎖定',1=>'鎖定');
 				<td align="center">
 				<? if(in_array('p38',$p_array)){?><input type="button" onclick="dialog('權限','iframe:manage_purview.php?uid=<?=ht($al['uid'])?>','700px','850px','iframe');" value="權限" />
 					 <? }?>										
-				<? if(in_array('e38',$p_array)){?><input type="button" onclick="dialog('修改','iframe:manage_edit.php?uid=<?=ht($al['uid'])?>','800px','760px','iframe');" value="修改" />
+				<? if(in_array('e38',$p_array)){?><input type="button" onclick="dialog('修改','iframe:manage_edit.php?uid=<?=ht($al['uid'])?>','800px','790px','iframe');" value="修改" />
 					 <? }?>
 				<? if(in_array('d38',$p_array)){?><input type="button" onclick="dialog('刪除','iframe:manage_del.php?uid=<?=ht($al['uid'])?>','800px','600','iframe');" value="刪除" />
 					  <? }?>

@@ -15,7 +15,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 		$db->query("UPDATE admin_info SET del='Y',close_date='$today' WHERE uid='$uid'");
 		$error='ok';
  		$descrip="del manage_del.php.php uid=$da[uid] name=$da[name]";
-		$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$id','$admin_d[uid]','3','$timeformat','$timestamp','$descrip')");
+		$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('38','$uid','$admin_d[uid]','3','$timeformat','$timestamp','$descrip')");
 }
 $admin_del=array('N' => '否', 'Y' => '是');
 $admin_group=array(0=>'管理者',1=>'開發人員',2=>'編輯人員',3=>'網頁設計師')	;
@@ -31,7 +31,6 @@ function change_btn(st) {
 	} else {
 		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
 	}
-}
 	if (ierror == 1) {
 		change_btn('c');
 		alert(message);

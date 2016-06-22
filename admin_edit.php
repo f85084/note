@@ -53,10 +53,10 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請輸入姓名 至少兩個字元\r\n';
 		ierror=1;
 		}				
-var celRegExp =  /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+var celRegExp =  /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 		cel=strim(document.form1.email.value );
 	if(!celRegExp.test(cel)){
-		message+='請輸入信箱格是錯誤 \r\n';
+		message+='請輸入信箱格式錯誤 \r\n';
 		ierror=1;
 		}				
 var cbdRegExp =  /^([0-9]{4})[\-]{1}([0-9]{2})[\-]{1}([0-9]{2})$/;
