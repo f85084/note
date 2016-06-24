@@ -23,7 +23,7 @@ if(isset($_POST['action']) && $_POST['action']=='update'){
 	$phone=$_POST[phone];
 	$cellphone=$_POST[cellphone];
 	if(!empty($_POST['pass_word']) && strlen($_POST['pass_word']) <6){$error.='密碼輸入太短\r\n';}
-	if(!preg_match('/^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}	
+	if(!preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}	
 	if(strlen($birthday)!=10 && !preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/',$birthday)){$error.='日期輸入錯誤 !\r\n';}
 	if(strlen($_POST['phone']) <4){$error.='分機號碼太短 長度為 4\r\n';}
 	if(strlen($name) <2){$error.='請輸入姓名 至少兩個字元\r\n';}

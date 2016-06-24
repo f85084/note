@@ -28,9 +28,14 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$del=$_POST['del'];
 	$is_lock=$_POST['is_lock'];		
 	if(is_null($group_uid)){$error.='請輸入群組!\r\n';}
+ 	if(!preg_match('/^(?=.*[a-zA-Z])(?!.*[^\x21-\x7e])(?!.*[\@#$%^&+=!]).{1,}$/',$user_name)){$error.='帳號 必須符合 大小寫英文數字\r\n';}	
+/*	$query_rid = $db->query("SELECT COUNT(*) FROM admin_info where user_name='$user_name'");
+	$q_rid = $db->fetch_row($query_rid);
+	$res_rid = $q_rid[0];	
+	if($res_rid!=0){$error.='帳號已有人使用!\r\n';} */
 	if(!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pass_word'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
-	if(!empty($email)&&!preg_match('/^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}
+	if(!empty($email)&&!preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}
 	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
 	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
 	if(empty($bday)){$error.='請輸入生日日期!\r\n';}
@@ -93,7 +98,7 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請輸入姓名\r\n';
 		ierror=1;
 				}				
-	var celRegExp =  /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+	var celRegExp =  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 		cel=strim(document.form1.email.value );
 	if(form1.email.value != "" && !celRegExp.test(cel)){
 		message+='請輸入信箱格式錯誤 \r\n';
@@ -122,14 +127,22 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 	if (form1.marry.value == "") {
 		message+='請選擇婚姻\r\n';
 		ierror=1;
-				}							
-	if (ierror == 1) {
+				}
+/* 	if (ierror == 1) {
 		change_btn('c');
 		alert(message);
 		change_btn('');
+	} else {
+		document.form1.submit();
+		setTimeout("change_btn('c')", 500);
+	}
+}     */			
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');		
 	} else{
 		//以下為ajax部分
-
 			if(form1.user_name.value == ''){
 				alert('請輸入帳號');
 			}else{
@@ -140,17 +153,18 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 					 type : "POST", 
 					 dataType : "text", 
 					 error : function(xhr){ 
-						   is_auth_passed = false;
+						   //is_auth_passed = false;
 						 },
 					 success : function(response){ 
-						if  (response == '1') {
-							is_auth_passed = true;
+						if  (response == '0') {
+							//is_auth_passed = true;
 							//alert(is_auth_passed);	
+							//alert(user_name);							
 							//alert('1');
 							document.form1.submit(); 	
-							setTimeout("change_btn('c')", 500);
+							//setTimeout("change_btn('c')", 500);
 						} else {
-							is_auth_passed = false;
+							//is_auth_passed = false;
 							//alert(is_auth_passed);
 							alert('帳號已註冊過！');
 						}

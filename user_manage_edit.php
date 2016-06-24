@@ -78,14 +78,14 @@ function change_btn(st) {
 	} else {
 		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
 	}
-}	
+}		
 function strim(str){
 	return str.replace(/(^\s*)|(\s*$)/g, "");
-		}		
+		}
 function check_empty() {
 	ierror = 0;
 	message = '';
-				
+						
 var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/;
 		cpw=strim(document.form1.pw.value);
 	if(form1.pw.value != "" && !cpwRegExp.test(cpw)){
@@ -151,12 +151,14 @@ var ccRegExp =  /^\d{1,}$/;
 		message+='國家代碼 必須為數字\r\n';
 		ierror=1;
 				}							
+
 var czRegExp =  /^\d{1,}$/;
 		cz=strim(document.form1.zip.value );				
 	if (!form1.zip.value == "" && !czRegExp.test(cz)) {
 		message+='郵遞區號 必須為數字\r\n';
 		ierror=1;
-				}														
+				}					
+			
 	if (ierror == 1) {
 		change_btn('c');
 		alert(message);
@@ -165,7 +167,7 @@ var czRegExp =  /^\d{1,}$/;
 		document.form1.submit();
 		setTimeout("change_btn('c')", 500);
 	}
-}     
+}      
 </script> 
 </head>
 <body>
@@ -263,7 +265,7 @@ var czRegExp =  /^\d{1,}$/;
 		</tr>		
 		<tr>
 			<td align="center">郵遞區號 / 地址</td>
-			<td><input type="text" name="zip" style="width:50px;" value="<?=$da['zip']?>" /> / <input type="text" name="zip" style="width:300px;" value="<?=$da['zip']?>" /></td>
+			<td><input type="text" name="zip" style="width:50px;" value="<?=$da['zip']?>" /> / <input type="text" name="address" style="width:300px;" value="<?=$da['address']?>" /></td>
 		</tr>				
 		<tr>
 			<td align="center">外部註冊ID</td>

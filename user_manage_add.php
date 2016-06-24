@@ -33,11 +33,12 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 	$intro=$_POST['intro'];
 	$ip = $_SERVER["REMOTE_ADDR"];	
 	if(!preg_match('/^(?=.*[a-zA-Z09.-_])(?!.*[\@#$%^&+=!]).{1,}$/',$account)){$error.='帳號格是錯誤  必須符合 大小寫英文數字 .-_\r\n';}	
-	$query_rid = $db->query("SELECT COUNT(*) FROM user where account='$account'");
+/* 	$query_rid = $db->query("SELECT COUNT(*) FROM user where account='$account'");
 	$q_rid = $db->fetch_row($query_rid);
 	$res_rid = $q_rid[0];	
-	if($res_rid!=0){$error.='帳號已有人使用!\r\n';}
+	if($res_rid!=0){$error.='帳號已有人使用!\r\n';} */
 	if(!preg_match('/^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.*[\W]).{6,20}$/', $_POST['pw'])){$error.='6-20位數，並且至少包含 大寫字母、小寫字母，但不包含其他特殊符號\r\n';} 
+	if(!preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/',$email)){$error.='請輸入信箱格式錯誤 \r\n';}		
 	if(empty($name)){$error.='請輸入姓名!\r\n';}
 	if(empty($byear)){$error.='請輸入生日年分!\r\n';}
 	if(empty($bmonth)){$error.='請輸入生日月份!\r\n';}
@@ -53,7 +54,7 @@ if(!empty($_POST['act']) && $_POST['act']=='add'){
 			VALUES ('$id','$account','$pw','$mobile_country_code','$mobile','$name','$nickname','$sex','$birthday','$email','$zip','$address','$status','$ulevel','$today','$etime','$ip','$fm','$fmid','$intro')");
  			$id=$db->insert_id();
 			$descrip="add user_manage_add.php account=$account name=$name";
-			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('41','$user_name','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
+			$db->query("INSERT INTO admin_act_log (tid,pid,uid,aid,atime,ftime,description) VALUES ('41','$id','$admin_d[uid]','1','$timeformat','$timestamp','$descrip')");
 			$error='ok';	 
 	 	}	
 	}		
@@ -81,10 +82,6 @@ function check_empty() {
 	ierror = 0;
 	message = '';
 				
-	if (form1.account.value == "") {
-		message+='請輸入帳號\r\n';
-		ierror=1;
-				}	
 var caRegExp =  /^(?=.*[a-zA-Z09.-_])(?!.*[,\@#$%^&+=!]).{1,}$/;				
 		ca=strim(document.form1.account.value );
 	if(!caRegExp.test(ca)){
@@ -124,7 +121,7 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請選擇生日日期\r\n';
 		ierror=1;
 				}	
-var celRegExp =  /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+var celRegExp =  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 		cel=strim(document.form1.email.value );
 	if(!celRegExp.test(cel)){
 		message+='請輸入信箱格是錯誤 \r\n';
@@ -162,7 +159,7 @@ var czRegExp =  /^\d{1,}$/;
 		message+='郵遞區號 必須為數字\r\n';
 		ierror=1;
 				}														
-	if (ierror == 1) {
+/* 	if (ierror == 1) {
 		change_btn('c');
 		alert(message);
 		change_btn('');
@@ -170,7 +167,45 @@ var czRegExp =  /^\d{1,}$/;
 		document.form1.submit();
 		setTimeout("change_btn('c')", 500);
 	}
-}     
+}      */
+	if (ierror == 1) {
+		change_btn('c');
+		alert(message);
+		change_btn('');		
+	} else{
+		//以下為ajax部分
+			if(form1.account.value == ''){
+				alert('請輸入帳號');
+			}else{
+				var account = $('#account').val();
+				$.ajax({
+					 url : "user_manage_add_ck.php", 
+					 data : { account : account}, 
+					 type : "POST", 
+					 dataType : "text", 
+					 error : function(xhr){ 
+						   //is_auth_passed = false;
+						 },
+					 success : function(response){ 
+						if  (response == '0') {
+							//is_auth_passed = true;
+							//alert(is_auth_passed);	
+							//alert(user_name);							
+							//alert('1');
+							document.form1.submit(); 	
+							//setTimeout("change_btn('c')", 500);
+						} else {
+							//is_auth_passed = false;
+							//alert(is_auth_passed);
+							alert('帳號已註冊過！');
+						}
+						//alert(response);
+						}
+						});		
+				}
+		}								
+	 
+} 
 </script> 
 </head>
 <body>

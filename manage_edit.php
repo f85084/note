@@ -252,9 +252,9 @@ function check_empty() {
 			<td>
 				<select name="sex" id="sex">
 					<option value="<?= $da['sex']; ?>" ><?= $admin_sex[$da['sex']]; ?></option>
-					<?foreach($admin_sex as $key => $value){?>
+					<? foreach($admin_sex as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
-					<?echo $key ;}?>
+					<? echo $key ;}?>
 				</select>						
 			</td>
 		</tr>
@@ -263,7 +263,7 @@ function check_empty() {
 			<td>
 				<select name="blood" id="blood">
 					<option value="<?= $da['blood']; ?>" ><?= $admin_blood[$da['blood']]; ?></option>
-					<?foreach($admin_blood as $key => $value){?>
+					<? foreach($admin_blood as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
 				</select>					
@@ -274,7 +274,7 @@ function check_empty() {
 			 <td>					 
 				<select name="marry" id="marry">
 					<option value="<?= $da['marry']; ?>" ><?= $admin_marry[$da['marry']]; ?></option>
-					<?foreach($admin_marry as $key => $value){?>
+					<? foreach($admin_marry as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
 				</select>	
@@ -289,7 +289,7 @@ function check_empty() {
 			<td>					 
 				<select name="del" id="del">
 					<option value="<?= $da['del']; ?>" ><?= $admin_del[$da['del']]; ?></option>
-					<?foreach($admin_del as $key => $value){?>
+					<? foreach($admin_del as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
 				</select>	
@@ -300,7 +300,7 @@ function check_empty() {
 				 <td>					 
 				<select name="is_lock" id="is_lock">
 					<option value="<?= $da['is_lock']; ?>" ><?= $admin_is_lock[$da['is_lock']]; ?></option>
-					<?foreach($admin_is_lock as $key => $value){?>
+					<? foreach($admin_is_lock as $key => $value){?>
 					<option value="<?= $key?>"><?= $value; ?></option>					
 					<?}?>
 				</select>	

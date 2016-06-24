@@ -53,7 +53,7 @@ var cpwRegExp = /^(?!.*[^\x21-\x7e])(?=.*[a-z])(?=.*[A-Z])(?!.*[^\x00-\xff])(?!.
 		message+='請輸入姓名 至少兩個字元\r\n';
 		ierror=1;
 		}				
-var celRegExp =  /^\w+([-.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+var celRegExp =  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
 		cel=strim(document.form1.email.value );
 	if(!celRegExp.test(cel)){
 		message+='請輸入信箱格式錯誤 \r\n';

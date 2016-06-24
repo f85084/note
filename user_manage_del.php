@@ -28,7 +28,11 @@ function change_btn(st) {
 	} else {
 		document.getElementById("subm_1").innerHTML = '<input value="送  出" type="button" onclick="change_btn(' + "'c'" + ');check_empty(this,' + "'check'" + ',true);" /><input type="hidden" name="act" value="add" />';
 	}
-}
+}	
+function check_empty() {
+	ierror = 0;
+	message = '';
+						
 	if (ierror == 1) {
 		change_btn('c');
 		alert(message);
@@ -37,7 +41,7 @@ function change_btn(st) {
 		document.form1.submit();
 		setTimeout("change_btn('c')", 500);
 	}
-}
+}      
 </script>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
