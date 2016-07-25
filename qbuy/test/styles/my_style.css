@@ -1,0 +1,73 @@
+body{
+	background-color: #FFF;
+}
+
+/* Style for tabs */
+#main {
+	/*background:#fff;*/
+	color:#111;
+	/*padding:15px 20px;
+	width:500px;
+	/*border:1px solid #222;*/
+	/*margin:8px auto;
+	height: 430px;*/
+}
+/*#main > li, #main > ul > li { list-style:none; float:left; }
+#main ul a {
+  /*display:block;*/
+  /*padding:6px 10px;
+  text-decoration:none!important;
+  margin:1px;
+  margin-left:0;
+  color:#FFF;
+  background:#FFF;
+}
+#main ul a:hover {
+  color:#FFF;
+  background:#fff;
+  }
+#main ul a.selected {
+  margin-bottom:0;
+  color:#000;
+  /*background:snow;*/
+  /*border-bottom:1px solid snow;
+  cursor:default;
+  }*/
+/*#main div {
+  padding:10px 10px 10px 10px;
+  *padding-top:3px;
+  *margin-top:-15px;
+  clear:left;*/
+  /*background:snow;*/
+  /*height: 630px ;
+}
+#main div a {
+	color:#FFF;
+	font-weight:bold;
+}*/
+#product1 {
+	padding:10px 10px 10px 10px;
+    float: left;
+    height: 100%;
+    width: 40%;
+}
+#product2 {
+    float: left;
+    height: 100%;
+    width: 50%;
+}
+/* 預設樣式 */
+.divbox{ 
+  float:left;
+
+ }
+/*  滑入時變換底色樣式 */  
+.divOver{
+	-webkit-opacity: 1;
+	-moz-opacity: 1;
+	opacity: 1;
+	} 
+.style{
+  float:left;
+
+}
