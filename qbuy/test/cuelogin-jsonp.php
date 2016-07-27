@@ -12,8 +12,6 @@ $pws = $_GET['pws'];
 $sec =  md5(date("Ymd").'cuebuy'.date("Hi")); */
 
 $url = 'http://sso.cue.social/cue-product-p.php?auth=279738bf8971eb963e9e12bdd8d6c9fd&sn=28263';
-
-
 ?>
       <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
       <script type="text/javascript">
